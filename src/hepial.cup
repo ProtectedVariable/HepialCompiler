@@ -1,0 +1,35 @@
+import java_cup.runtime.*;
+
+non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF;
+terminal beginPrg, endPrg, prg, semicolon, ident, coma, const, eq, openpar, closepar, beginfunc, endfunc, int, bool, opensq, closesq, doubledot, rea, writ, string, retur, if, then, else, endif, whil, do, endwhil, fo, from, to, endfor, true, false, plus, minus, time, div, doubleq, diff, lt, gt, le, ge, and, or, notn, not;
+
+AXIOM ::= PROGRAM;
+
+PROGRAM ::= HEADER beginPrg BODY endPrg;
+PROGRAM ::= HEADER DECLARATIONS beginPrg BODY endPrg;
+
+HEADER ::= prg ident;
+
+DECLARATIONS ::= DECLARATION | DECLARATION DECLARATIONS;
+DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
+
+DECLAVAR ::= TYPE LIDENT semicolon;
+
+LIDENT ::= ident | LIDENT coma ident;
+
+DECLACONST ::= const TYPE ident eq EXPR semicolon;
+
+DECLAFONCT ::= TYPE ident openpar PARAM closepar DECLARATIONS beginfunc BODY endfunc;
+DECLAFONCT ::= TYPE ident openpar PARAM closepar beginfunc BODY endfunc;
+DECLAFONCT ::= TYPE ident openpar closepar DECLARATIONS beginfunc BODY endfunc;
+DECLAFONCT ::= TYPE ident openpar closepar beginfunc BODY endfunc;
+
+TYPE ::= TYPEBASE | ARRAY;
+
+TYPEBASE ::= int | bool;
+
+ARRAY ::= TYPEBASE opensq DIM closesq;
+
+DIM ::= EXPR doubledot EXPR | DIM coma EXPR doubledot EXPR;
+
+PARAM ::= TYPE ident | PARAM coma TYPE ident;
