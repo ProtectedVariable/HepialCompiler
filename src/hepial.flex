@@ -2,7 +2,7 @@ import java.util.*;
 import java_cup.runtime.*;
 
 %%
-%class Sgml
+%class HepialF
 %cup
 %line
 %column
