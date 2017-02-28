@@ -1,0 +1,13 @@
+programme Toto
+	entier x;
+	entier i;
+debutprg
+	x = 1;
+	pour i allantde 10 a 20 faire
+		si x == 1 alors
+			ecrire "toto"
+		sinon
+			ecrire "ta mere"
+		finsi
+	finpour
+finprg
