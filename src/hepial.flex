@@ -12,7 +12,7 @@ BEGINPRG=debutprg\b
 ENDPRG=finprg\b
 PRG=programme\b
 SEMICOLON=\;
-IDENT=([A-Za-z])([A-Za-z0-9])+\b
+IDENT=([A-Za-z])([A-Za-z0-9])*\b
 COMA=\,
 CONST=constante\b
 EQ=\=
@@ -27,7 +27,7 @@ CLOSESQ=\]
 DOUBLEDOT=\.\.
 REA=lire\b
 WRIT=ecrire\b
-STRING=\".*\"
+STRING=\".\"
 RETUR=retourne\b
 IF=si\b
 THEN=alors\b
@@ -58,7 +58,6 @@ NOTN=\~
 NOT=non\b
 INTCONST=((\+?|\-?)([0-9])+)\b
 %%
-
 {BEGINPRG} {
     return new Symbol(sym.beginPrg);
 }
@@ -73,10 +72,6 @@ INTCONST=((\+?|\-?)([0-9])+)\b
 
 {SEMICOLON} {
     return new Symbol(sym.semicolon);
-}
-
-{IDENT} {
-    return new Symbol(sym.ident);
 }
 
 {COMA} {
@@ -254,3 +249,10 @@ INTCONST=((\+?|\-?)([0-9])+)\b
 {INTCONST} {
     return new Symbol(sym.intConst);
 }
+
+{IDENT} {
+    return new Symbol(sym.ident);
+}
+
+[\ |\t|\n|\r|\r\n]                  {}
+. {}
