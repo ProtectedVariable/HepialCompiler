@@ -1,4 +1,5 @@
-all: Test.class
+all: run
+FILE=../test/test.hepial
 
 Test.class: HepialF.java hepial.cup Test.java
 	java -jar java-cup-11b.jar hepial.cup

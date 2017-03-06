@@ -59,199 +59,199 @@ NOT=non\b
 INTCONST=((\+?|\-?)([0-9])+)\b
 %%
 {BEGINPRG} {
-    return new Symbol(sym.beginPrg);
+    return new Symbol(sym.t_beginPrg);
 }
 
 {ENDPRG} {
-    return new Symbol(sym.endPrg);
+    return new Symbol(sym.t_endPrg);
 }
 
 {PRG} {
-    return new Symbol(sym.prg);
+    return new Symbol(sym.t_prg);
 }
 
 {SEMICOLON} {
-    return new Symbol(sym.semicolon);
+    return new Symbol(sym.t_semicolon);
 }
 
 {COMA} {
-    return new Symbol(sym.coma);
+    return new Symbol(sym.t_coma);
 }
 
 {CONST} {
-    return new Symbol(sym.const);
+    return new Symbol(sym.t_const);
 }
 
 {EQ} {
-    return new Symbol(sym.eq);
+    return new Symbol(sym.t_eq);
 }
 
 {OPENPAR} {
-    return new Symbol(sym.openpar);
+    return new Symbol(sym.t_openpar);
 }
 
 {CLOSEPAR} {
-    return new Symbol(sym.closepar);
+    return new Symbol(sym.t_closepar);
 }
 
 {BEGINFUNC} {
-    return new Symbol(sym.beginfunc);
+    return new Symbol(sym.t_beginfunc);
 }
 
 {ENDFUNC} {
-    return new Symbol(sym.endfunc);
+    return new Symbol(sym.t_endfunc);
 }
 
 {INT} {
-    return new Symbol(sym.int);
+    return new Symbol(sym.t_int);
 }
 
 {BOOL} {
-    return new Symbol(sym.bool);
+    return new Symbol(sym.t_bool);
 }
 
 {OPENSQ} {
-    return new Symbol(sym.opensq);
+    return new Symbol(sym.t_opensq);
 }
 
 {CLOSESQ} {
-    return new Symbol(sym.closesq);
+    return new Symbol(sym.t_closesq);
 }
 
 {DOUBLEDOT} {
-    return new Symbol(sym.doubledot);
+    return new Symbol(sym.t_doubledot);
 }
 
 {REA} {
-    return new Symbol(sym.rea);
+    return new Symbol(sym.t_read);
 }
 
 {WRIT} {
-    return new Symbol(sym.writ);
+    return new Symbol(sym.t_write);
 }
 
 {STRING} {
-    return new Symbol(sym.string);
+    return new Symbol(sym.t_string);
 }
 
 {RETUR} {
-    return new Symbol(sym.retur);
+    return new Symbol(sym.t_return);
 }
 
 {IF} {
-    return new Symbol(sym.if);
+    return new Symbol(sym.t_if);
 }
 
 {THEN} {
-    return new Symbol(sym.then);
+    return new Symbol(sym.t_then);
 }
 
 {ELSE} {
-    return new Symbol(sym.else);
+    return new Symbol(sym.t_else);
 }
 
 {ENDIF} {
-    return new Symbol(sym.endif);
+    return new Symbol(sym.t_endif);
 }
 
 {WHIL} {
-    return new Symbol(sym.whil);
+    return new Symbol(sym.t_while);
 }
 
 {DO} {
-    return new Symbol(sym.do);
+    return new Symbol(sym.t_do);
 }
 
 {ENDWHIL} {
-    return new Symbol(sym.endwhil);
+    return new Symbol(sym.t_endwhile);
 }
 
 {FO} {
-    return new Symbol(sym.fo);
+    return new Symbol(sym.t_for);
 }
 
 {FROM} {
-    return new Symbol(sym.from);
+    return new Symbol(sym.t_from);
 }
 
 {TO} {
-    return new Symbol(sym.to);
+    return new Symbol(sym.t_to);
 }
 
 {ENDFOR} {
-    return new Symbol(sym.endfor);
+    return new Symbol(sym.t_endfor);
 }
 
 {TRUE} {
-    return new Symbol(sym.true);
+    return new Symbol(sym.t_true);
 }
 
 {FALSE} {
-    return new Symbol(sym.false);
+    return new Symbol(sym.t_false);
 }
 
 {PLUS} {
-    return new Symbol(sym.plus);
+    return new Symbol(sym.t_plus);
 }
 
 {MINUS} {
-    return new Symbol(sym.minus);
+    return new Symbol(sym.t_minus);
 }
 
 {TIME} {
-    return new Symbol(sym.time);
+    return new Symbol(sym.t_time);
 }
 
 {DIV} {
-    return new Symbol(sym.div);
+    return new Symbol(sym.t_div);
 }
 
 {DOUBLEQ} {
-    return new Symbol(sym.doubleq);
+    return new Symbol(sym.t_doubleq);
 }
 
 {DIFF} {
-    return new Symbol(sym.diff);
+    return new Symbol(sym.t_diff);
 }
 
 {LT} {
-    return new Symbol(sym.lt);
+    return new Symbol(sym.t_lt);
 }
 
 {GT} {
-    return new Symbol(sym.gt);
+    return new Symbol(sym.t_gt);
 }
 
 {LE} {
-    return new Symbol(sym.le);
+    return new Symbol(sym.t_le);
 }
 
 {GE} {
-    return new Symbol(sym.ge);
+    return new Symbol(sym.t_ge);
 }
 
 {AND} {
-    return new Symbol(sym.and);
+    return new Symbol(sym.t_and);
 }
 
 {OR} {
-    return new Symbol(sym.or);
+    return new Symbol(sym.t_or);
 }
 
 {NOTN} {
-    return new Symbol(sym.notn);
+    return new Symbol(sym.t_notn);
 }
 
 {NOT} {
-    return new Symbol(sym.not);
+    return new Symbol(sym.t_not);
 }
 
 {INTCONST} {
-    return new Symbol(sym.intConst);
+    return new Symbol(sym.t_intConst);
 }
 
 {IDENT} {
-    return new Symbol(sym.ident);
+    return new Symbol(sym.t_ident);
 }
 
 [\ |\t|\n|\r|\r\n]                  {}

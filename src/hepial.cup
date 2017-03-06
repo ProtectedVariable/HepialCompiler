@@ -1,71 +1,75 @@
 import java_cup.runtime.*;
 
 non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, INSTRUCTIONS, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF, INDICES;
-terminal beginPrg, endPrg, prg, semicolon, ident, coma, const, eq, openpar, closepar, beginfunc, endfunc, int, bool, opensq, closesq, doubledot, rea, writ, string, retur, if, then, else, endif, whil, do, endwhil, fo, from, to, endfor, true, false, plus, minus, time, div, doubleq, diff, lt, gt, le, ge, and, or, notn, not, intConst;
+terminal t_beginPrg, t_endPrg, t_prg, t_semicolon, t_ident, t_coma, t_const, t_eq, t_openpar, t_closepar, t_beginfunc, t_endfunc, t_int, t_bool, t_opensq, t_closesq, t_doubledot, t_read, t_write, t_string, t_return, t_if, t_then, t_else, t_endif, t_while, t_do, t_endwhile, t_for, t_from, t_to, t_endfor, t_true, t_false, t_plus, t_minus, t_time, t_div, t_doubleq, t_diff, t_lt, t_gt, t_le, t_ge, t_and, t_or, t_notn, t_not, t_intConst;
+
+precedence left t_plus, t_minus, t_time, t_div, t_doubleq, t_diff;
+precedence left t_lt, t_gt, t_le, t_ge, t_and, t_or, t_doubledot;
+precedence right t_notn, t_not;
 
 AXIOM ::= PROGRAM;
 
-PROGRAM ::= HEADER beginPrg BODY endPrg;
-PROGRAM ::= HEADER DECLARATIONS beginPrg BODY endPrg;
+PROGRAM ::= HEADER t_beginPrg BODY t_endPrg;
+PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg;
 
-HEADER ::= prg ident;
+HEADER ::= t_prg t_ident;
 
 DECLARATIONS ::= DECLARATION DECLARATIONS | DECLARATION;
 DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
 
-DECLAVAR ::= TYPE LIDENT semicolon;
+DECLAVAR ::= TYPE LIDENT t_semicolon;
 
-LIDENT ::= ident | LIDENT coma ident;
+LIDENT ::= t_ident | LIDENT t_coma t_ident;
 
-DECLACONST ::= const TYPE ident eq EXPR semicolon;
+DECLACONST ::= t_const TYPE t_ident t_eq EXPR t_semicolon;
 
-DECLAFONCT ::= TYPE ident openpar PARAM closepar DECLARATIONS beginfunc BODY endfunc;
-DECLAFONCT ::= TYPE ident openpar PARAM closepar beginfunc BODY endfunc;
-DECLAFONCT ::= TYPE ident openpar closepar DECLARATIONS beginfunc BODY endfunc;
-DECLAFONCT ::= TYPE ident openpar closepar beginfunc BODY endfunc;
+DECLAFONCT ::= TYPE t_ident t_openpar PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc;
+DECLAFONCT ::= TYPE t_ident t_openpar PARAM t_closepar t_beginfunc BODY t_endfunc;
+DECLAFONCT ::= TYPE t_ident t_openpar t_closepar DECLARATIONS t_beginfunc BODY t_endfunc;
+DECLAFONCT ::= TYPE t_ident t_openpar t_closepar t_beginfunc BODY t_endfunc;
 
 TYPE ::= TYPEBASE | ARRAY;
 
-TYPEBASE ::= int | bool;
+TYPEBASE ::= t_int | t_bool;
 
-ARRAY ::= TYPEBASE opensq DIM closesq;
+ARRAY ::= TYPEBASE t_opensq DIM t_closesq;
 
-DIM ::= EXPR doubledot EXPR | DIM coma EXPR doubledot EXPR;
+DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
 
-PARAM ::= TYPE ident | PARAM coma TYPE ident;
+PARAM ::= TYPE t_ident | PARAM t_coma TYPE t_ident;
 
 BODY ::= INSTRUCTIONS;
 //TODO allow no instr (* instead of +)
 INSTRUCTIONS ::= INSTR INSTRUCTIONS | INSTR;
 INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
-READ ::= rea ident semicolon;
+READ ::= t_read t_ident t_semicolon;
 
-WRITE ::= writ EXPR semicolon | writ string semicolon;
+WRITE ::= t_write EXPR t_semicolon | t_write t_string t_semicolon;
 
-ASSIGNMENT ::= ACCESS eq EXPR semicolon;
+ASSIGNMENT ::= ACCESS t_eq EXPR t_semicolon;
 
-RETURN ::= retur EXPR semicolon;
+RETURN ::= t_return EXPR t_semicolon;
 
-CONDTITION ::= if EXPR then BODY else BODY endif;
+CONDTITION ::= t_if EXPR t_then BODY t_else BODY t_endif;
 
-WHILE ::= whil EXPR do BODY endwhil;
+WHILE ::= t_while EXPR t_do BODY t_endwhile;
 
-FOR ::= fo ident from EXPR to EXPR do BODY endfor;
+FOR ::= t_for t_ident t_from EXPR t_to EXPR t_do BODY t_endfor;
 
-EXPR ::= EXPR OPEBIN EXPR | OPEUN EXPR | openpar EXPR closepar | OPERAND;
+EXPR ::= EXPR OPEBIN EXPR | OPEUN EXPR | t_openpar EXPR t_closepar | OPERAND;
 
-ACCESS ::= ident | ident INDICES;
+ACCESS ::= t_ident | t_ident INDICES;
 
 INDICES ::= INDEX INDICES | INDEX;
-INDEX ::= opensq EXPR closesq;
+INDEX ::= t_opensq EXPR t_closesq;
 
-OPERAND ::= ACCESS | FUNCCALL | intConst | true | false;
+OPERAND ::= ACCESS | FUNCCALL | t_intConst | t_true | t_false;
 
-OPEBIN ::= plus | minus | time | div | doubleq | diff | lt | gt | le | ge | and | or;
+OPEBIN ::= t_plus | t_minus | t_time | t_div | t_doubleq | t_diff | t_lt | t_gt | t_le | t_ge | t_and | t_or;
 
-OPEUN ::= not | notn;
+OPEUN ::= t_not | t_notn;
 
-FUNCCALL ::= ident openpar closepar | ident openpar PAREFF closepar;
+FUNCCALL ::= t_ident t_openpar t_closepar | t_ident t_openpar PAREFF t_closepar;
 
-PAREFF ::= EXPR | PAREFF coma EXPR;
+PAREFF ::= EXPR | PAREFF t_coma EXPR;
