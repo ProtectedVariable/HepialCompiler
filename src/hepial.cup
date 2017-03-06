@@ -10,8 +10,8 @@ PROGRAM ::= HEADER DECLARATIONS beginPrg BODY endPrg;
 
 HEADER ::= prg ident;
 
-DECLARATIONS ::= DECLARATION DECLARATIONS | DECLARATIONS;
-DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
+DECLARATIONS ::= DECLARATION DECLARATIONS | DECLARATION;
+DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
 
 DECLAVAR ::= TYPE LIDENT semicolon;
 
@@ -24,24 +24,24 @@ DECLAFONCT ::= TYPE ident openpar PARAM closepar beginfunc BODY endfunc;
 DECLAFONCT ::= TYPE ident openpar closepar DECLARATIONS beginfunc BODY endfunc;
 DECLAFONCT ::= TYPE ident openpar closepar beginfunc BODY endfunc;
 
-TYPE ::= TYPEBASE | ARRAY;
+TYPE ::= TYPEBASE | ARRAY;
 
-TYPEBASE ::= int | bool;
+TYPEBASE ::= int | bool;
 
 ARRAY ::= TYPEBASE opensq DIM closesq;
 
-DIM ::= EXPR doubledot EXPR | DIM coma EXPR doubledot EXPR;
+DIM ::= EXPR doubledot EXPR | DIM coma EXPR doubledot EXPR;
 
 PARAM ::= TYPE ident | PARAM coma TYPE ident;
 
 BODY ::= INSTRUCTIONS;
-
-INSTRUCTIONS ::= INSTR INSTRUCTIONS | INSTRUCTIONS;
-INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
+//TODO allow no instr (* instead of +)
+INSTRUCTIONS ::= INSTR INSTRUCTIONS | INSTR;
+INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
 READ ::= rea ident semicolon;
 
-WRITE ::= writ EXPR semicolon | writ string semicolon;
+WRITE ::= writ EXPR semicolon | writ string semicolon;
 
 ASSIGNMENT ::= ACCESS eq EXPR semicolon;
 
@@ -53,19 +53,19 @@ WHILE ::= whil EXPR do BODY endwhil;
 
 FOR ::= fo ident from EXPR to EXPR do BODY endfor;
 
-EXPR ::= EXPR OPEBIN EXPR | OPEUN EXPR | openpar EXPR closepar | OPERAND;
+EXPR ::= EXPR OPEBIN EXPR | OPEUN EXPR | openpar EXPR closepar | OPERAND;
 
-ACCESS ::= ident | ident INDICES;
+ACCESS ::= ident | ident INDICES;
 
-INDICES ::= INDEX INDICES | INDEX;
+INDICES ::= INDEX INDICES | INDEX;
 INDEX ::= opensq EXPR closesq;
 
-OPERAND ::= ACCESS | FUNCCALL | intConst | true | false;
+OPERAND ::= ACCESS | FUNCCALL | intConst | true | false;
 
-OPEBIN ::= plus | minus | time | div | doubleq | diff | lt | gt | le | ge | and | or;
+OPEBIN ::= plus | minus | time | div | doubleq | diff | lt | gt | le | ge | and | or;
 
 OPEUN ::= not | notn;
 
 FUNCCALL ::= ident openpar closepar | ident openpar PAREFF closepar;
 
-PAREFF ::= EXPR | PAREFF coma EXPR;
+PAREFF ::= EXPR | PAREFF coma EXPR;
