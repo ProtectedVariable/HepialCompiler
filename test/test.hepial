@@ -1,13 +1,15 @@
 programme Toto
 	entier x;
 	entier i;
+	entier programmes;
 debutprg
 	x = 1;
+	programmes = 1;
 	pour i allantde 10 a 20 faire
 		si x == 1 alors
-			ecrire "toto"
+			ecrire "toto";
 		sinon
-			ecrire "ta mere"
+			ecrire "ta mere";
 		finsi
 	finpour
 finprg
