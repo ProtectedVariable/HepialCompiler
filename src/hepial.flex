@@ -295,12 +295,12 @@ INTCONST=((\+?|\-?)([0-9])+)
 
 {INTCONST} {
 	System.out.println("I've seen sym.t_intConst "+yytext());
-    return new Symbol(sym.t_intConst);
+    return new Symbol(sym.t_intConst, Integer.parseInt(yytext()));
 }
 
 {IDENT} {
 	System.out.println("I've seen sym.t_ident "+yytext());
-    return new Symbol(sym.t_ident);
+    return new Symbol(sym.t_ident, yytext());
 }
 
 [\ |\t|\n|\r|\r\n]                  {}

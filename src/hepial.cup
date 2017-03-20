@@ -1,7 +1,9 @@
 import java_cup.runtime.*;
 
 non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, INSTRUCTIONS, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF, INDICES;
-terminal t_beginPrg, t_endPrg, t_prg, t_semicolon, t_ident, t_coma, t_const, t_eq, t_openpar, t_closepar, t_beginfunc, t_endfunc, t_int, t_bool, t_opensq, t_closesq, t_doubledot, t_read, t_write, t_string, t_return, t_if, t_then, t_else, t_endif, t_while, t_do, t_endwhile, t_for, t_from, t_to, t_endfor, t_true, t_false, t_plus, t_minus, t_time, t_div, t_doubleq, t_diff, t_lt, t_gt, t_le, t_ge, t_and, t_or, t_notn, t_not, t_intConst;
+terminal t_beginPrg, t_endPrg, t_prg, t_semicolon, t_coma, t_const, t_eq, t_openpar, t_closepar, t_beginfunc, t_endfunc, t_int, t_bool, t_opensq, t_closesq, t_doubledot, t_read, t_write, t_string, t_return, t_if, t_then, t_else, t_endif, t_while, t_do, t_endwhile, t_for, t_from, t_to, t_endfor, t_true, t_false, t_plus, t_minus, t_time, t_div, t_doubleq, t_diff, t_lt, t_gt, t_le, t_ge, t_and, t_or, t_notn, t_not;
+terminal int t_intConst;
+terminal String t_ident;
 
 precedence left t_plus, t_minus, t_time, t_div, t_doubleq, t_diff;
 precedence left t_lt, t_gt, t_le, t_ge, t_and, t_or, t_doubledot;
@@ -19,7 +21,7 @@ DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
 
 DECLAVAR ::= TYPE LIDENT t_semicolon;
 
-LIDENT ::= t_ident | LIDENT t_coma t_ident;
+LIDENT ::= t_ident | t_ident t_coma LIDENT;
 
 DECLACONST ::= t_const TYPE t_ident t_eq EXPR t_semicolon;
 
