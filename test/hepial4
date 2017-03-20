@@ -1,0 +1,28 @@
+programme hepial4
+entier x,y,z,p,d,i;
+entier z;
+debutprg
+	x = 1;
+	y = 5;
+	z = x + y;
+	x = 5 - z;	
+	si x == 5 alors
+		x = x+3;
+		p = x*z;
+	sinon
+		x = x+5;
+		y = 5;
+	finsi
+	d = 4/2;
+	pour i allantde 1 a 10 faire
+		x = x + i;
+	finpour
+	tantque z <= 5 faire
+		z=z+1;
+	fintantque
+	ecrire "valeur de x :";
+	ecrire x;
+	ecrire "valeur de y :";
+	ecrire y;
+	ecrire "merci tchao !";
+finprg

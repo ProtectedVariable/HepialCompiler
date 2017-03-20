@@ -1,0 +1,30 @@
+programme hepial5
+
+entier n;
+entier result;
+
+entier facto( entier n)
+debutfonc
+	entier x=0;
+	si n == 0 alors
+		retourne(1);
+	sinon 
+		retourne(n*facto(n-1));
+	finsi
+finfonc
+
+
+debutprg
+	lire n;
+	
+	si n<20 alors
+		result = facto(n);
+	sinon
+		ecrire " votre nombre est trop grand ! ";
+	finsi
+		ecrire x;
+	ecrire "factorielle de ";
+	ecrire n;
+	ecrire " est égale à : »;
+	ecrire result; 
+finprg

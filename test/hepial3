@@ -1,0 +1,17 @@
+programme hepial3
+constante entier FIXE = 50;
+entier nb;
+entier carre(entier i)
+	entier test;
+	debutfonc	
+		i = i * i;
+		retourne i;
+finfonc
+debutprg
+	si nb >= FIXE alors		
+		nb = 5;
+	sinon
+		nb = 3;
+	finsi
+	ecrire carre(nb); 
+finprg
