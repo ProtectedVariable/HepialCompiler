@@ -56,7 +56,7 @@ AND=et
 OR=ou
 NOTN=\~
 NOT=non
-INTCONST=((\+?|\-?)([0-9])+)
+INTCONST=(({NOTN}?)([0-9])+)
 %%
 {BEGINPRG} {
 	System.out.println("I've seen sym.t_beginPrg "+yytext());

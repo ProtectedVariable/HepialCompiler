@@ -1,13 +1,13 @@
 programme hepial2
 
-entier a,b;
+entier c,b;
 
 debutprg
 
-	lire a;
+	lire c;
 	lire b;
-	si (a>=b) alors
-		ecrire a;
+	si (c>=b) alors
+		ecrire c;
 	sinon
 		ecrire b;
 	finsi
