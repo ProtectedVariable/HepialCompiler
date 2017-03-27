@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Function extends Symbol{
+public class Function extends SymbolHEPIAL{
 	private List<Type> params;
 	private Type returnType;
 

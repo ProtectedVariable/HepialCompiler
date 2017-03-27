@@ -2,7 +2,7 @@ import java.util.HashSet;
 
 public class SymbolTable {
 	private static SymbolTable instance = null;
-	private HashSet<Symbol> map;
+	private HashSet<SymbolHEPIAL> map;
 
 	private SymbolTable () {
 	}

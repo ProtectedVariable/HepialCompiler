@@ -8,6 +8,7 @@ import java_cup.runtime.*;
 %column
 %unicode
 
+COMMENT=\/\/.*
 BEGINPRG=debutprg
 ENDPRG=finprg
 PRG=programme
@@ -58,6 +59,7 @@ NOTN=\~
 NOT=non
 INTCONST=(({NOTN}?)([0-9])+)
 %%
+{COMMENT} {}
 {BEGINPRG} {
 	System.out.println("I've seen sym.t_beginPrg "+yytext());
     return new Symbol(sym.t_beginPrg);
