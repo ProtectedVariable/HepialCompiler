@@ -1,7 +1,7 @@
 public abstract class SymbolHEPIAL {
-	protected String name;
+	protected int line;
 
-	protected SymbolHEPIAL (String name) {
-		this.name = name;
+	protected SymbolHEPIAL(int line) {
+		this.line = line;
 	}
 }
