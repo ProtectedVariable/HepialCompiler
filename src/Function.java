@@ -4,8 +4,8 @@ public class Function extends SymbolHEPIAL{
 	private List<Type> params;
 	private Type returnType;
 
-	public Function (String name, List<Type> params, Type returnType) {
-		super(name);
+	public Function (List<Type> params, Type returnType, int bloc, int line) {
+		super(bloc, line);
 		this.params = params;
 		this.returnType = returnType;
 	}

@@ -1,5 +1,5 @@
 
-public abstract class Entry {
+public class Entry {
 
 	protected String identifier;
 	

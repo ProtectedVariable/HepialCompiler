@@ -8,6 +8,10 @@ import java_cup.runtime.*;
 %column
 %unicode
 
+%{
+    int line = 0;
+%}
+
 COMMENT=\/\/.*
 BEGINPRG=debutprg
 ENDPRG=finprg
@@ -305,5 +309,6 @@ INTCONST=(({NOTN}?)([0-9])+)
     return new Symbol(sym.t_ident, yytext());
 }
 
-[\ |\t|\n|\r|\r\n]                  {}
+[\n] {line++;}
+[\ |\t|\n|\r|\r]                  {}
 . {}

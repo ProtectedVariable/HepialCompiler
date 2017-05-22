@@ -4,6 +4,8 @@
 //----------------------------------------------------
 
 import java_cup.runtime.*;
+import java.util.List;
+import java.util.LinkedList;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -429,6 +431,19 @@ public class parser extends java_cup.runtime.lr_parser {
   public int error_sym() {return 1;}
 
 
+
+    List<String> identifiers = new LinkedList<>();
+
+    Type getTypeFromString(String s) {
+        if(s.equals("booleen")) {
+            return Type.BOOLEAN;
+        } else if(s.equals("entier")) {
+            return Type.INTEGER;
+        }
+        return null;
+    }
+
+
 /** Cup generated class to encapsulate user supplied action code.*/
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 class CUP$parser$actions {
@@ -457,6 +472,8 @@ class CUP$parser$actions {
           case 0: // AXIOM ::= PROGRAM 
             {
               Object RESULT =null;
+		
+    System.out.println(SymbolTable.getInstance());
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("AXIOM",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -552,8 +569,21 @@ class CUP$parser$actions {
           case 10: // DECLAVAR ::= TYPE LIDENT t_semicolon 
             {
               Object RESULT =null;
+		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int lidleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int lidright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object lid = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
-	System.out.println("AXIOM");
+    for(String str : identifiers) {
+        System.out.println(str);
+        //TODO replace 0 with actual line (flex knows)
+        SymbolTable.getInstance().getBloc();
+        System.out.println("1");
+        SymbolTable.getInstance().add(new Entry(str), new Variable((Type)t, SymbolTable.getInstance().getBloc(), 0));
+    }
+    identifiers.clear();
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DECLAVAR",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -563,7 +593,10 @@ class CUP$parser$actions {
           case 11: // LIDENT ::= t_ident 
             {
               Object RESULT =null;
-
+		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		String t = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 identifiers.add(t); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LIDENT",6, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -572,7 +605,10 @@ class CUP$parser$actions {
           case 12: // LIDENT ::= t_ident t_coma LIDENT 
             {
               Object RESULT =null;
-
+		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		String t = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		 identifiers.add(t); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LIDENT",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -626,6 +662,11 @@ class CUP$parser$actions {
           case 18: // TYPE ::= TYPEBASE 
             {
               Object RESULT =null;
+		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    RESULT = t;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TYPE",9, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -635,6 +676,8 @@ class CUP$parser$actions {
           case 19: // TYPE ::= ARRAY 
             {
               Object RESULT =null;
+		
+
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TYPE",9, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -644,7 +687,10 @@ class CUP$parser$actions {
           case 20: // TYPEBASE ::= t_int 
             {
               Object RESULT =null;
-
+		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = Type.INTEGER; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TYPEBASE",10, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -653,7 +699,10 @@ class CUP$parser$actions {
           case 21: // TYPEBASE ::= t_bool 
             {
               Object RESULT =null;
-
+		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = Type.BOOLEAN; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TYPEBASE",10, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

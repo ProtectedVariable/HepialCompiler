@@ -5,11 +5,13 @@ import java.util.Stack;
 public class SymbolTable {
 	private static SymbolTable instance = null;
 
-	private Stack<Map<Entry, SymbolHEPIAL>> block;
+	private Map<Entry, SymbolHEPIAL> table;
+	private Stack<Integer> blocs;
+	private int nextBloc = 0;
 
 	private SymbolTable() {
-		this.block = new Stack<>();
-		this.block.push(new HashMap<>());
+		this.enterBlock();
+		this.table = new HashMap<>();
 	}
 
 	public static SymbolTable getInstance() {
@@ -21,21 +23,23 @@ public class SymbolTable {
 	
 	public void add(Entry e, SymbolHEPIAL s) {
 		if(identify(e) == null) throw new RuntimeException("double declaration");
-		this.block.peek().put(e, s);
+		this.table.put(e, s);
 	}
 	
 	public SymbolHEPIAL identify(Entry e) {
-		for (Map<Entry, SymbolHEPIAL> map : block) {
-			if(map.get(e) != null) map.get(e);
-		}
-		return null;
+		return table.get(e);
 	}
 	
 	public void enterBlock() {
-		this.block.push(new HashMap<>());
+		this.blocs.push(nextBloc);
+		nextBloc++;
 	}
 	
 	public void exitBlock() {
-		this.block.pop();
+		this.blocs.pop();
+	}
+	
+	public int getBloc() {
+		return blocs.peek();
 	}
 }
