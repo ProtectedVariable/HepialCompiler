@@ -9,12 +9,12 @@ class Test {
 			try {
 				System.out.println("===========PARSING THE FILE===========");
 				myParser.parse();
-			}catch (Exception e){
-				//Here we catch the exception in case of a parsing error or an error with the grammar
+			} catch (Exception e) {
+				// Here we catch the exception in case of a parsing error or an error with the grammar
 				System.out.println("(Error) " + e.getMessage());
 				e.printStackTrace();
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Invalid file");
 		}

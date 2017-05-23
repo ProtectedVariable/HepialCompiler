@@ -29,8 +29,9 @@ public class SymbolTable {
 			this.table.put(e, new ArrayList<>());
 		}
 		for (SymbolHEPIAL sh : identify(e)) {
+			System.out.println(sh.bloc+" "+s.bloc);
 			if(sh.bloc <= s.bloc)
-				throw new RuntimeException("double declaration");
+				throw new RuntimeException("Double declaration of symbol "+e.identifier);
 		}
 		
 		this.table.get(e).add(s);
@@ -60,7 +61,12 @@ public class SymbolTable {
 			String key = entry.getKey().identifier;
 			for (SymbolHEPIAL sh : entry.getValue()) {
 				String value = sh.type.toString();
-				sb.append(key+" => "+value+" (Block "+sh.bloc+")").append("\n");
+				if(sh instanceof Variable)
+					sb.append("Variable "+key+" of type "+value+" (Block "+sh.bloc+")").append("\n");
+				else if (sh instanceof Function)
+					sb.append("Function "+key+" returns "+sh.type+" params ("+((Function)sh).getParams().toString()+")").append("\n");
+				else if(sh instanceof Const)
+					sb.append("Constant "+key+" of type "+sh.type).append("\n");
 			}
 		}
 		return sb.toString();

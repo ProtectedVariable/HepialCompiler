@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 parser code {:
     List<String> identifiers = new LinkedList<>();
+    List<Type> params = new LinkedList<>();
 :};
 
 non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, INSTRUCTIONS, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF, INDICES;
@@ -29,6 +30,7 @@ DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
 
 DECLAVAR ::= TYPE:t LIDENT:lid t_semicolon {:
     for(String str : identifiers) {
+        //TODO replace 0 with actual line n°
         SymbolTable.getInstance().add(new Entry(str), new Variable((Type)t, SymbolTable.getInstance().getBloc(), 0));
     }
     identifiers.clear();
@@ -38,7 +40,12 @@ LIDENT ::= t_ident:t {: identifiers.add(t); :} | t_ident:t t_coma LIDENT {: iden
 
 DECLACONST ::= t_const TYPE t_ident t_eq EXPR t_semicolon;
 
-DECLAFONCT ::= TYPE t_ident t_openpar PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc;
+DECLAFONCT ::= TYPE:rt t_ident:name t_openpar PARAM t_closepar {: SymbolTable.getInstance().enterBlock(); :} DECLARATIONS t_beginfunc BODY t_endfunc {:
+    SymbolTable.getInstance().exitBlock();
+    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, 0));
+    params.clear();
+    identifiers.clear();
+:};
 DECLAFONCT ::= TYPE t_ident t_openpar PARAM t_closepar t_beginfunc BODY t_endfunc;
 DECLAFONCT ::= TYPE t_ident t_openpar t_closepar DECLARATIONS t_beginfunc BODY t_endfunc;
 DECLAFONCT ::= TYPE t_ident t_openpar t_closepar t_beginfunc BODY t_endfunc;
@@ -47,17 +54,23 @@ TYPE ::= TYPEBASE:t {:
     RESULT = t;
 :};
 
-TYPE ::= ARRAY {:
-
+TYPE ::= ARRAY:t {:
+    RESULT = t;
 :};
 
 TYPEBASE ::= t_int:t  {: RESULT = Type.INTEGER; :} | t_bool:t  {: RESULT = Type.BOOLEAN; :};
 
-ARRAY ::= TYPEBASE t_opensq DIM t_closesq;
+ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
+    if((Type)t == Type.INTEGER) {
+        RESULT = Type.INTEGERARRAY;
+    } else if((Type)t == Type.BOOLEAN) {
+        RESULT = Type.BOOLEANARRAY;
+    }
+:};
 
 DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
 
-PARAM ::= TYPE t_ident | PARAM t_coma TYPE t_ident;
+PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); identifiers.add(name); :}  | PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); identifiers.add(name); :};
 
 BODY ::= INSTRUCTIONS;
 //TODO allow no instr (* instead of +)
