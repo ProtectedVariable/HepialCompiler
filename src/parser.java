@@ -434,15 +434,6 @@ public class parser extends java_cup.runtime.lr_parser {
 
     List<String> identifiers = new LinkedList<>();
 
-    Type getTypeFromString(String s) {
-        if(s.equals("booleen")) {
-            return Type.BOOLEAN;
-        } else if(s.equals("entier")) {
-            return Type.INTEGER;
-        }
-        return null;
-    }
-
 
 /** Cup generated class to encapsulate user supplied action code.*/
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
@@ -577,10 +568,6 @@ class CUP$parser$actions {
 		Object lid = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
     for(String str : identifiers) {
-        System.out.println(str);
-        //TODO replace 0 with actual line (flex knows)
-        SymbolTable.getInstance().getBloc();
-        System.out.println("1");
         SymbolTable.getInstance().add(new Entry(str), new Variable((Type)t, SymbolTable.getInstance().getBloc(), 0));
     }
     identifiers.clear();

@@ -4,15 +4,6 @@ import java.util.LinkedList;
 
 parser code {:
     List<String> identifiers = new LinkedList<>();
-
-    Type getTypeFromString(String s) {
-        if(s.equals("booleen")) {
-            return Type.BOOLEAN;
-        } else if(s.equals("entier")) {
-            return Type.INTEGER;
-        }
-        return null;
-    }
 :};
 
 non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, INSTRUCTIONS, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF, INDICES;
@@ -38,10 +29,6 @@ DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
 
 DECLAVAR ::= TYPE:t LIDENT:lid t_semicolon {:
     for(String str : identifiers) {
-        System.out.println(str);
-        //TODO replace 0 with actual line (flex knows)
-        SymbolTable.getInstance().getBloc();
-        System.out.println("1");
         SymbolTable.getInstance().add(new Entry(str), new Variable((Type)t, SymbolTable.getInstance().getBloc(), 0));
     }
     identifiers.clear();

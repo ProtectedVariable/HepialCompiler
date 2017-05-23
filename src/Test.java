@@ -11,7 +11,8 @@ class Test {
 				myParser.parse();
 			}catch (Exception e){
 				//Here we catch the exception in case of a parsing error or an error with the grammar
-				System.out.println("(Error)");
+				System.out.println("(Error) " + e.getMessage());
+				e.printStackTrace();
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
