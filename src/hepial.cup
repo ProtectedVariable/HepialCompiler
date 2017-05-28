@@ -1,4 +1,3 @@
-import java_cup.runtime.*;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -30,25 +29,65 @@ DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
 
 DECLAVAR ::= TYPE:t LIDENT:lid t_semicolon {:
     for(String str : identifiers) {
-        //TODO replace 0 with actual line n°
-        SymbolTable.getInstance().add(new Entry(str), new Variable((Type)t, SymbolTable.getInstance().getBloc(), 0));
+        SymbolTable.getInstance().add(new Entry(str), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line));
     }
     identifiers.clear();
 :};
 
 LIDENT ::= t_ident:t {: identifiers.add(t); :} | t_ident:t t_coma LIDENT {: identifiers.add(t); :};
 
-DECLACONST ::= t_const TYPE t_ident t_eq EXPR t_semicolon;
+DECLACONST ::= t_const TYPE:t t_ident:name t_eq EXPR t_semicolon {:
+    if(t == Type.INTEGER) {
+        SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line));
+    } else if(t == Type.BOOLEAN) {
+        SymbolTable.getInstance().add(new Entry((String)name), new BoolConst(SymbolTable.getInstance().getBloc(), HepialF.line));
+    }
+:};
 
-DECLAFONCT ::= TYPE:rt t_ident:name t_openpar PARAM t_closepar {: SymbolTable.getInstance().enterBlock(); :} DECLARATIONS t_beginfunc BODY t_endfunc {:
+DECLAFONCT ::= TYPE:rt t_ident:name t_openpar PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
+    SymbolTable.getInstance().enterBlock();
+    System.out.println(params.size()+" "+identifiers.size());
+    for(int i = 0; i < params.size(); i++) {
+        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
+    }
     SymbolTable.getInstance().exitBlock();
-    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, 0));
+    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
     params.clear();
     identifiers.clear();
 :};
-DECLAFONCT ::= TYPE t_ident t_openpar PARAM t_closepar t_beginfunc BODY t_endfunc;
-DECLAFONCT ::= TYPE t_ident t_openpar t_closepar DECLARATIONS t_beginfunc BODY t_endfunc;
-DECLAFONCT ::= TYPE t_ident t_openpar t_closepar t_beginfunc BODY t_endfunc;
+
+DECLAFONCT ::= TYPE:rt t_ident:name t_openpar PARAM t_closepar t_beginfunc BODY t_endfunc {:
+    SymbolTable.getInstance().enterBlock();
+    for(int i = 0; i < params.size(); i++) {
+        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
+    }
+    SymbolTable.getInstance().exitBlock();
+    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
+    params.clear();
+    identifiers.clear();
+:};
+
+DECLAFONCT ::= TYPE:rt t_ident:name t_openpar t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
+    SymbolTable.getInstance().enterBlock();
+    for(int i = 0; i < params.size(); i++) {
+        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
+    }
+    SymbolTable.getInstance().exitBlock();
+    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
+    params.clear();
+    identifiers.clear();
+:};
+
+DECLAFONCT ::= TYPE:rt t_ident:name t_openpar t_closepar t_beginfunc BODY t_endfunc {:
+    SymbolTable.getInstance().enterBlock();
+    for(int i = 0; i < params.size(); i++) {
+        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
+    }
+    SymbolTable.getInstance().exitBlock();
+    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
+    params.clear();
+    identifiers.clear();
+:};
 
 TYPE ::= TYPEBASE:t {:
     RESULT = t;

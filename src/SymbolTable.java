@@ -29,9 +29,9 @@ public class SymbolTable {
 			this.table.put(e, new ArrayList<>());
 		}
 		for (SymbolHEPIAL sh : identify(e)) {
-			System.out.println(sh.bloc+" "+s.bloc);
-			if(sh.bloc <= s.bloc)
-				throw new RuntimeException("Double declaration of symbol "+e.identifier);
+			if(blocs.contains(sh.bloc)) {
+				throw new RuntimeException("Double declaration of symbol "+e.identifier+" (first declared at line "+sh.line+")");
+			}
 		}
 		
 		this.table.get(e).add(s);

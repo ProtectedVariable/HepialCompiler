@@ -1,15 +1,14 @@
 
 public class IntConst extends Const {
 
-	private final int VALUE;
+	//private final int VALUE;
 	
-	protected IntConst(Type t, int bloc, int line, int value) {
-		super(t, bloc, line);
-		this.VALUE = value;
+	protected IntConst(int bloc, int line) {
+		super(Type.INTEGER, bloc, line);
 	}
-
+/*
 	public int getVALUE() {
 		return VALUE;
 	}
-
+*/
 }
