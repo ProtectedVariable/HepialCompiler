@@ -4,6 +4,7 @@ import java.util.LinkedList;
 parser code {:
     List<String> identifiers = new LinkedList<>();
     List<Type> params = new LinkedList<>();
+    Function currentFunction = null;
 :};
 
 non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, INSTRUCTIONS, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF, INDICES;
@@ -45,11 +46,13 @@ DECLACONST ::= t_const TYPE:t t_ident:name t_eq EXPR t_semicolon {:
 :};
 
 STARTFONC ::= TYPE:rt t_ident:name t_openpar {:
-    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
+    currentFunction = new Function((Type)rt, HepialF.line);
+    SymbolTable.getInstance().add(new Entry((String)name), currentFunction);
     SymbolTable.getInstance().enterBlock();
 :};
 
 DECLAFONCT ::=  STARTFONC PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
+    currentFunction.getParams().addAll(params);
     SymbolTable.getInstance().exitBlock();
 :};
 
@@ -77,7 +80,8 @@ ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
 
 DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
 
-PARAM ::= TYPE:t t_ident:name {: SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}  | PARAM t_coma TYPE:t t_ident:name {: SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
+PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}
+| PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
 
 BODY ::= INSTRUCTIONS;
 INSTRUCTIONS ::= INSTR INSTRUCTIONS |;

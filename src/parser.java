@@ -420,6 +420,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
     List<String> identifiers = new LinkedList<>();
     List<Type> params = new LinkedList<>();
+    Function currentFunction = null;
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -610,7 +611,8 @@ class CUP$parser$actions {
 		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
-    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
+    currentFunction = new Function((Type)rt, HepialF.line);
+    SymbolTable.getInstance().add(new Entry((String)name), currentFunction);
     SymbolTable.getInstance().enterBlock();
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("STARTFONC",33, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -622,6 +624,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
 		
+    currentFunction.getParams().addAll(params);
     SymbolTable.getInstance().exitBlock();
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DECLAFONCT",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -737,7 +740,7 @@ class CUP$parser$actions {
 		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
+		 params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PARAM",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -752,7 +755,7 @@ class CUP$parser$actions {
 		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
+		 params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PARAM",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
