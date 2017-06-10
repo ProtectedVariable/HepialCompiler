@@ -1,5 +1,9 @@
+package ch.hepia.IL.tcp;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.hepia.IL.tcp.types.Type;
 
 public class Function extends SymbolHEPIAL{
 	

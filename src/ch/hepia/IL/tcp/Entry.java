@@ -1,9 +1,11 @@
+package ch.hepia.IL.tcp;
+
 
 public class Entry {
 
 	protected String identifier;
 	
-	protected Entry(String ident) {
+	public Entry(String ident) {
 		this.identifier = ident;
 	}
 	

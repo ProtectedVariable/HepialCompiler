@@ -5,6 +5,8 @@
 
 import java.util.List;
 import java.util.LinkedList;
+import ch.hepia.IL.tcp.*;
+import ch.hepia.IL.tcp.types.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -590,9 +592,9 @@ class CUP$parser$actions {
 		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
 		
-    if(t == Type.INTEGER) {
+    if(t instanceof IntType) {
         SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line));
-    } else if(t == Type.BOOLEAN) {
+    } else if(t instanceof BoolType) {
         SymbolTable.getInstance().add(new Entry((String)name), new BoolConst(SymbolTable.getInstance().getBloc(), HepialF.line));
     }
 
@@ -677,7 +679,7 @@ class CUP$parser$actions {
 		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = Type.INTEGER; 
+		 RESULT = IntType.getInstance(); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TYPEBASE",10, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -689,7 +691,7 @@ class CUP$parser$actions {
 		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = Type.BOOLEAN; 
+		 RESULT = BoolType.getInstance(); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TYPEBASE",10, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -702,11 +704,14 @@ class CUP$parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
 		
-    if((Type)t == Type.INTEGER) {
+    /*
+    if(t instanceof IntType) {
         RESULT = Type.INTEGERARRAY;
-    } else if((Type)t == Type.BOOLEAN) {
+    } else if(t instanceof BoolType) {
         RESULT = Type.BOOLEANARRAY;
     }
+    */
+   RESULT = t;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ARRAY",11, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

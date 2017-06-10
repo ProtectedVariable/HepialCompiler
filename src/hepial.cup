@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.LinkedList;
+import ch.hepia.IL.tcp.*;
+import ch.hepia.IL.tcp.types.*;
 
 parser code {:
     List<String> identifiers = new LinkedList<>();
@@ -38,9 +40,9 @@ DECLAVAR ::= TYPE:t LIDENT:lid t_semicolon {:
 LIDENT ::= t_ident:t {: identifiers.add(t); :} | t_ident:t t_coma LIDENT {: identifiers.add(t); :};
 
 DECLACONST ::= t_const TYPE:t t_ident:name t_eq EXPR t_semicolon {:
-    if(t == Type.INTEGER) {
+    if(t instanceof IntType) {
         SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line));
-    } else if(t == Type.BOOLEAN) {
+    } else if(t instanceof BoolType) {
         SymbolTable.getInstance().add(new Entry((String)name), new BoolConst(SymbolTable.getInstance().getBloc(), HepialF.line));
     }
 :};
@@ -68,14 +70,17 @@ TYPE ::= ARRAY:t {:
     RESULT = t;
 :};
 
-TYPEBASE ::= t_int:t  {: RESULT = Type.INTEGER; :} | t_bool:t  {: RESULT = Type.BOOLEAN; :};
+TYPEBASE ::= t_int:t  {: RESULT = IntType.getInstance(); :} | t_bool:t  {: RESULT = BoolType.getInstance(); :};
 
 ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
-    if((Type)t == Type.INTEGER) {
+    /*
+    if(t instanceof IntType) {
         RESULT = Type.INTEGERARRAY;
-    } else if((Type)t == Type.BOOLEAN) {
+    } else if(t instanceof BoolType) {
         RESULT = Type.BOOLEANARRAY;
     }
+    */
+   RESULT = t;
 :};
 
 DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;

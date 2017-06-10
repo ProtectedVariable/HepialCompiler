@@ -1,3 +1,7 @@
+package ch.hepia.IL.tcp;
+
+import ch.hepia.IL.tcp.types.Type;
+
 public abstract class SymbolHEPIAL {
 	
 	protected int line;
