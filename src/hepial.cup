@@ -7,6 +7,7 @@ parser code {:
 :};
 
 non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, INSTRUCTIONS, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF, INDICES;
+non terminal STARTFONC; // <- To avoid reduction conflicts
 terminal t_beginPrg, t_endPrg, t_prg, t_semicolon, t_coma, t_const, t_eq, t_openpar, t_closepar, t_beginfunc, t_endfunc, t_int, t_bool, t_opensq, t_closesq, t_doubledot, t_read, t_write, t_string, t_return, t_if, t_then, t_else, t_endif, t_while, t_do, t_endwhile, t_for, t_from, t_to, t_endfor, t_true, t_false, t_plus, t_minus, t_time, t_div, t_doubleq, t_diff, t_lt, t_gt, t_le, t_ge, t_and, t_or, t_notn, t_not;
 terminal int t_intConst;
 terminal String t_ident;
@@ -19,12 +20,11 @@ AXIOM ::= PROGRAM {:
     System.out.println(SymbolTable.getInstance());
 :};
 
-PROGRAM ::= HEADER t_beginPrg BODY t_endPrg;
 PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg;
 
 HEADER ::= t_prg t_ident;
 
-DECLARATIONS ::= DECLARATION DECLARATIONS | DECLARATION;
+DECLARATIONS ::= DECLARATION DECLARATIONS |;
 DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
 
 DECLAVAR ::= TYPE:t LIDENT:lid t_semicolon {:
@@ -44,49 +44,17 @@ DECLACONST ::= t_const TYPE:t t_ident:name t_eq EXPR t_semicolon {:
     }
 :};
 
-DECLAFONCT ::= TYPE:rt t_ident:name t_openpar PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
-    SymbolTable.getInstance().enterBlock();
-    System.out.println(params.size()+" "+identifiers.size());
-    for(int i = 0; i < params.size(); i++) {
-        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
-    }
-    SymbolTable.getInstance().exitBlock();
+STARTFONC ::= TYPE:rt t_ident:name t_openpar {:
     SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
-    params.clear();
-    identifiers.clear();
+    SymbolTable.getInstance().enterBlock();
 :};
 
-DECLAFONCT ::= TYPE:rt t_ident:name t_openpar PARAM t_closepar t_beginfunc BODY t_endfunc {:
-    SymbolTable.getInstance().enterBlock();
-    for(int i = 0; i < params.size(); i++) {
-        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
-    }
+DECLAFONCT ::=  STARTFONC PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
     SymbolTable.getInstance().exitBlock();
-    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
-    params.clear();
-    identifiers.clear();
 :};
 
-DECLAFONCT ::= TYPE:rt t_ident:name t_openpar t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
-    SymbolTable.getInstance().enterBlock();
-    for(int i = 0; i < params.size(); i++) {
-        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
-    }
+DECLAFONCT ::= STARTFONC t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
     SymbolTable.getInstance().exitBlock();
-    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
-    params.clear();
-    identifiers.clear();
-:};
-
-DECLAFONCT ::= TYPE:rt t_ident:name t_openpar t_closepar t_beginfunc BODY t_endfunc {:
-    SymbolTable.getInstance().enterBlock();
-    for(int i = 0; i < params.size(); i++) {
-        SymbolTable.getInstance().add(new Entry(identifiers.get(i)), new Variable(params.get(i), SymbolTable.getInstance().getBloc(), HepialF.line));
-    }
-    SymbolTable.getInstance().exitBlock();
-    SymbolTable.getInstance().add(new Entry((String)name), new Function(params, (Type)rt, HepialF.line));
-    params.clear();
-    identifiers.clear();
 :};
 
 TYPE ::= TYPEBASE:t {:
@@ -109,11 +77,10 @@ ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
 
 DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
 
-PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); identifiers.add(name); :}  | PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); identifiers.add(name); :};
+PARAM ::= TYPE:t t_ident:name {: SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}  | PARAM t_coma TYPE:t t_ident:name {: SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
 
 BODY ::= INSTRUCTIONS;
-//TODO allow no instr (* instead of +)
-INSTRUCTIONS ::= INSTR INSTRUCTIONS | INSTR;
+INSTRUCTIONS ::= INSTR INSTRUCTIONS |;
 INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
 READ ::= t_read t_ident t_semicolon;
