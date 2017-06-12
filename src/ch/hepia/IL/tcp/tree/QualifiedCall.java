@@ -4,8 +4,8 @@ public class QualifiedCall extends Call {
 
 	private Expression reciever;
 	
-	public QualifiedCall(Expression reciever, Idf idf, EffectiveParameters parameters) {
-		super(idf, parameters);
+	public QualifiedCall(int line, Expression reciever, Idf idf, EffectiveParameters parameters) {
+		super(line, idf, parameters);
 		this.reciever = reciever;
 	}	
 }

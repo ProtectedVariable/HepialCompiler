@@ -1,5 +1,11 @@
 package ch.hepia.IL.tcp.tree;
 
-public class Instruction implements AbstractTree {
+public abstract class Instruction implements AbstractTree {
 
+	protected int line;
+
+	public Instruction(int line) {
+		this.line = line;
+	}
+	
 }

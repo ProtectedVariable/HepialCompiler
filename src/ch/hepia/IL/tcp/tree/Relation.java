@@ -1,5 +1,9 @@
 package ch.hepia.IL.tcp.tree;
 
-public class Relation extends Binary {
+public abstract class Relation extends Binary {
+
+	public Relation(int line, Expression left, Expression right) {
+		super(line, left, right);
+	}
 
 }
