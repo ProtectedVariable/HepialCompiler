@@ -1,10 +1,11 @@
-import java.util.List;
-import java.util.LinkedList;
+import java.util.*;
 import ch.hepia.IL.tcp.*;
 import ch.hepia.IL.tcp.types.*;
+import ch.hepia.IL.tcp.tree.*;
 
 parser code {:
     List<String> identifiers = new LinkedList<>();
+    Stack<AbstractTree> treeStack = new Stack<>();
     List<Type> params = new LinkedList<>();
     Function currentFunction = null;
 :};
@@ -25,7 +26,9 @@ AXIOM ::= PROGRAM {:
 
 PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg;
 
-HEADER ::= t_prg t_ident;
+HEADER ::= t_prg t_ident {:
+    treeStack.push(new Block(0));
+:};
 
 DECLARATIONS ::= DECLARATION DECLARATIONS |;
 DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
@@ -96,26 +99,46 @@ READ ::= t_read t_ident t_semicolon;
 
 WRITE ::= t_write EXPR t_semicolon | t_write t_string t_semicolon;
 
-ASSIGNMENT ::= ACCESS t_eq EXPR t_semicolon;
+ASSIGNMENT ::= ACCESS t_eq EXPR t_semicolon {:
+    //EXPR
+    Expression source = (Expression) (treeStack.pop());
+    //ACCESS
+    Idf dest = (Idf) (treeStack.pop());
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(new Assignment(HepialF.line, source, dest));
+:};
 
 RETURN ::= t_return EXPR t_semicolon;
 
-CONDTITION ::= t_if EXPR t_then BODY t_else BODY t_endif;
+CONDTITION ::= t_if EXPR t_then BODY t_else BODY t_endif {:
+    Expression cnd = (Expression) treeStack.pop();
+    Block then = (Block) treeStack.pop();
+    Block _else = (Block) treeStack.pop();
+    Condition cond = new Condition(HepialF.line, cnd, then.getInstructions(), _else.getInstructions());
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(cond);
+:};
 
 WHILE ::= t_while EXPR t_do BODY t_endwhile;
 
 FOR ::= t_for t_ident t_from EXPR t_to EXPR t_do BODY t_endfor;
 
-EXPR ::= EXPR OPEBIN EXPR | OPEUN EXPR | t_openpar EXPR t_closepar | OPERAND;
+EXPR ::= EXPR OPEBIN:op EXPR {:
+    //TODO
+:};
 
-ACCESS ::= t_ident | t_ident INDICES;
+EXPR ::= OPEUN EXPR;
+EXPR ::= t_openpar EXPR t_closepar;
+EXPR ::=  OPERAND;
+
+ACCESS ::= t_ident | t_ident INDICES; //TODO
 
 INDICES ::= INDEX INDICES | INDEX;
 INDEX ::= t_opensq EXPR t_closesq;
 
 OPERAND ::= ACCESS | FUNCCALL | t_intConst | t_true | t_false;
 
-OPEBIN ::= t_plus | t_minus | t_time | t_div | t_doubleq | t_diff | t_lt | t_gt | t_le | t_ge | t_and | t_or;
+OPEBIN ::= t_plus {: RESULT = "+"; :} | t_minus  {: RESULT = "-"; :} | t_time  {: RESULT = "*"; :} | t_div  {: RESULT = "/"; :} | t_doubleq  {: RESULT = "=="; :} | t_diff  {: RESULT = "<>"; :} | t_lt {: RESULT = "<"; :} | t_gt  {: RESULT = ">"; :} | t_le  {: RESULT = "<="; :} | t_ge  {: RESULT = ">="; :} | t_and {: RESULT = "et"; :} | t_or {: RESULT = "ou"; :};
 
 OPEUN ::= t_not | t_notn;
 

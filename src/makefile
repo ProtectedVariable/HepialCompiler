@@ -2,6 +2,8 @@ all: run
 FILE=../test/test.hepial
 
 Test.class: HepialF.java hepial.cup Test.java
+	javac ch/hepia/IL/tcp/tree/*.java
+	javac ch/hepia/IL/tcp/types/*.java
 	java -jar java-cup-11b.jar hepial.cup
 	javac -classpath .:java-cup-11b.jar sym.java
 	javac -classpath .:java-cup-11b.jar parser.java
