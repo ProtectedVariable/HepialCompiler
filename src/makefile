@@ -18,4 +18,4 @@ run: Test.class
 	javac -classpath .:java-cup-11b.jar $^
 
 clean:
-	rm *.class sym.java parser.java HepialF.java\~ HepialF.java
+	rm *.class sym.java parser.java HepialF.java
