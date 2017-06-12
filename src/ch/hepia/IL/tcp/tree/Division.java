@@ -2,8 +2,8 @@ package ch.hepia.IL.tcp.tree;
 
 public class Division extends Arithmetic {
 
-	public Division(int line, Expression left, Expression right) {
-		super(line, left, right);
+	public Division(Expression left, Expression right) {
+		super(left, right);
 	}
 
 	@Override
@@ -12,4 +12,8 @@ public class Division extends Arithmetic {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return left+" / "+right;
+	}
 }

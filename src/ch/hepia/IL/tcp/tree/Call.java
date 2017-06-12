@@ -16,4 +16,9 @@ public class Call extends Instruction {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return "Call to"+idf.getName();
+	}
 }

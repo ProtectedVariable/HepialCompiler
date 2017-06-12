@@ -2,8 +2,8 @@ package ch.hepia.IL.tcp.tree;
 
 public class SupEqual extends Relation {
 
-	public SupEqual(int line, Expression left, Expression right) {
-		super(line, left, right);
+	public SupEqual(Expression left, Expression right) {
+		super(left, right);
 	}
 
 	@Override
@@ -12,4 +12,8 @@ public class SupEqual extends Relation {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return left +" >= "+right;
+	}
 }

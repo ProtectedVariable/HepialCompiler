@@ -6,7 +6,7 @@ debutprg
 	x = 1;
 	programmes = 1;
 	pour i allantde 10 a 20 faire
-		si x == 1 alors
+		si x == 15 alors
 			ecrire "toto";
 		sinon
 			ecrire "ta mere";

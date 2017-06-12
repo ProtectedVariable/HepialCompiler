@@ -21,4 +21,15 @@ public class For extends Instruction {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("for("+idf.getName()+" = "+infLimit+" to "+supLimit+") {").append("\n");
+		for (Instruction instruction : instructions) {
+			sb.append(instruction).append("\n");
+		}
+		sb.append("}");
+		return sb.toString();
+	}
 }

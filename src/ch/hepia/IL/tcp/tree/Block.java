@@ -22,4 +22,13 @@ public class Block extends Instruction {
 		return instructions;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Instruction instruction : instructions) {
+			sb.append(instruction).append("\n");
+		}
+		return sb.toString();
+	}
+	
 }

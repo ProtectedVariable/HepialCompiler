@@ -18,5 +18,19 @@ public class Condition extends Instruction {
 		return null;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("if("+condition+") {").append("\n");
+		for (Instruction instruction : then) {
+			sb.append(instruction).append("\n");
+		}
+		sb.append(" } else {");
+		for (Instruction instruction : _else) {
+			sb.append(instruction).append("\n");
+		}
+		sb.append("}");
+		return sb.toString();
+	} 
 	
 }

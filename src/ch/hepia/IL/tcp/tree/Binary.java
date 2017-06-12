@@ -1,10 +1,9 @@
 package ch.hepia.IL.tcp.tree;
 
 public abstract class Binary extends Expression {
-	private Expression left, right;
+	protected Expression left, right;
 
-	public Binary(int line, Expression left, Expression right) {
-		super(line);
+	public Binary(Expression left, Expression right) {
 		this.left = left;
 		this.right = right;
 	}

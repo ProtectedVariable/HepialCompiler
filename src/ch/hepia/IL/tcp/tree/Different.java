@@ -2,8 +2,8 @@ package ch.hepia.IL.tcp.tree;
 
 public class Different extends Relation {
 
-	public Different(int line, Expression left, Expression right) {
-		super(line, left, right);
+	public Different(Expression left, Expression right) {
+		super(left, right);
 	}
 
 	@Override
@@ -12,4 +12,9 @@ public class Different extends Relation {
 		return null;
 	}
 
+	
+	@Override
+	public String toString() {
+		return left+" <> "+right;
+	}
 }

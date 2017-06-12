@@ -1,10 +1,9 @@
 package ch.hepia.IL.tcp.tree;
 
-public class Number extends Expression {
+public class NumberValue extends Expression {
 	private int value;
 
-	public Number(int line, int value) {
-		super(line);
+	public NumberValue(int value) {
 		this.value = value;
 	}
 
@@ -14,5 +13,9 @@ public class Number extends Expression {
 		return null;
 	}
 	
+	@Override
+	public String toString() {
+		return String.valueOf(value);
+	}
 	
 }

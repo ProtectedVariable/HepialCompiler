@@ -16,4 +16,9 @@ public class Assignment extends Instruction {
 		return null;
 	}
 	
+	@Override
+	public String toString() {
+		return dest +" = "+source;
+	}
+	
 }

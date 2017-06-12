@@ -1,10 +1,9 @@
 package ch.hepia.IL.tcp.tree;
 
-public class Addition extends Arithmetic {
+public class Or extends Arithmetic {
 
-	public Addition(Expression left, Expression right) {
+	public Or(Expression left, Expression right) {
 		super(left, right);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -15,7 +14,7 @@ public class Addition extends Arithmetic {
 	
 	@Override
 	public String toString() {
-		return left+" + "+right;
+		return left+" | "+right;
 	}
 
 }

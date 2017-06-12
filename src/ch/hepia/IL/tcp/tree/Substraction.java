@@ -2,8 +2,8 @@ package ch.hepia.IL.tcp.tree;
 
 public class Substraction extends Arithmetic {
 
-	public Substraction(int line, Expression left, Expression right) {
-		super(line, left, right);
+	public Substraction(Expression left, Expression right) {
+		super(left, right);
 	}
 
 	@Override
@@ -12,4 +12,8 @@ public class Substraction extends Arithmetic {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return left+" - "+right;
+	}
 }

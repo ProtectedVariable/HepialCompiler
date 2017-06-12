@@ -22,13 +22,13 @@ precedence right t_notn, t_not;
 
 AXIOM ::= PROGRAM {:
     System.out.println(SymbolTable.getInstance());
+    System.out.println("AbstractTree stack size "+treeStack.size());
+    System.out.println(treeStack.peek());
 :};
 
 PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg;
 
-HEADER ::= t_prg t_ident {:
-    treeStack.push(new Block(0));
-:};
+HEADER ::= t_prg t_ident;
 
 DECLARATIONS ::= DECLARATION DECLARATIONS |;
 DECLARATION ::= DECLAVAR | DECLACONST | DECLAFONCT;
@@ -82,7 +82,7 @@ ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
     } else if(t instanceof BoolType) {
         RESULT = Type.BOOLEANARRAY;
     }
-    */
+    *///TODO
    RESULT = t;
 :};
 
@@ -91,7 +91,7 @@ DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
 PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}
 | PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
 
-BODY ::= INSTRUCTIONS;
+BODY ::= {: treeStack.push(new Block(HepialF.line)); :} INSTRUCTIONS; //TODO check
 INSTRUCTIONS ::= INSTR INSTRUCTIONS |;
 INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
@@ -111,9 +111,10 @@ ASSIGNMENT ::= ACCESS t_eq EXPR t_semicolon {:
 RETURN ::= t_return EXPR t_semicolon;
 
 CONDTITION ::= t_if EXPR t_then BODY t_else BODY t_endif {:
-    Expression cnd = (Expression) treeStack.pop();
-    Block then = (Block) treeStack.pop();
     Block _else = (Block) treeStack.pop();
+    Block then = (Block) treeStack.pop();
+    Expression cnd = (Expression) treeStack.pop();
+
     Condition cond = new Condition(HepialF.line, cnd, then.getInstructions(), _else.getInstructions());
     Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(cond);
@@ -121,22 +122,77 @@ CONDTITION ::= t_if EXPR t_then BODY t_else BODY t_endif {:
 
 WHILE ::= t_while EXPR t_do BODY t_endwhile;
 
-FOR ::= t_for t_ident t_from EXPR t_to EXPR t_do BODY t_endfor;
+FOR ::= t_for t_ident:n t_from EXPR t_to EXPR t_do BODY t_endfor {:
+    Block body = (Block) treeStack.pop();
+
+    Expression to = (Expression) treeStack.pop();
+    Expression from = (Expression) treeStack.pop();
+
+    For loop = new For(HepialF.line, new Idf(n), from, to, body.getInstructions());
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(loop);
+:};
 
 EXPR ::= EXPR OPEBIN:op EXPR {:
-    //TODO
+    Expression right = (Expression) treeStack.pop();
+    Expression left = (Expression) treeStack.pop();
+
+    switch((String)op) {
+        case "+":
+            treeStack.push(new Addition(left, right));
+            break;
+        case "-":
+            treeStack.push(new Substraction(left, right));
+            break;
+        case "*":
+            treeStack.push(new Product(left, right));
+            break;
+        case "/":
+            treeStack.push(new Division(left, right));
+            break;
+        case "==":
+            treeStack.push(new Equal(left, right));
+            break;
+        case "<>":
+            treeStack.push(new Different(left, right));
+            break;
+        case "<":
+            treeStack.push(new Inferior(left, right));
+            break;
+        case ">":
+            treeStack.push(new Superior(left, right));
+            break;
+        case "<=":
+            treeStack.push(new InfEqual(left, right));
+            break;
+        case ">=":
+            treeStack.push(new SupEqual(left, right));
+            break;
+        case "et":
+            treeStack.push(new And(left, right));
+            break;
+        case "ou":
+            treeStack.push(new Or(left, right));
+            break;
+    }
 :};
 
 EXPR ::= OPEUN EXPR;
 EXPR ::= t_openpar EXPR t_closepar;
 EXPR ::=  OPERAND;
 
-ACCESS ::= t_ident | t_ident INDICES; //TODO
+ACCESS ::= t_ident:n {:
+    treeStack.push(new Idf((String)n));
+:};
+ACCESS ::= t_ident INDICES;//TODO
 
 INDICES ::= INDEX INDICES | INDEX;
 INDEX ::= t_opensq EXPR t_closesq;
 
-OPERAND ::= ACCESS | FUNCCALL | t_intConst | t_true | t_false;
+OPERAND ::= ACCESS | FUNCCALL | t_true | t_false;
+OPERAND ::= t_intConst:i {:
+    treeStack.push(new NumberValue(i));
+:};
 
 OPEBIN ::= t_plus {: RESULT = "+"; :} | t_minus  {: RESULT = "-"; :} | t_time  {: RESULT = "*"; :} | t_div  {: RESULT = "/"; :} | t_doubleq  {: RESULT = "=="; :} | t_diff  {: RESULT = "<>"; :} | t_lt {: RESULT = "<"; :} | t_gt  {: RESULT = ">"; :} | t_le  {: RESULT = "<="; :} | t_ge  {: RESULT = ">="; :} | t_and {: RESULT = "et"; :} | t_or {: RESULT = "ou"; :};
 

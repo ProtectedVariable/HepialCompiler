@@ -8,4 +8,10 @@ public class QualifiedCall extends Call {
 		super(line, idf, parameters);
 		this.reciever = reciever;
 	}	
+	
+	@Override
+	public String toString() {
+		return "Qualified call to "+reciever;
+	}
+	
 }
