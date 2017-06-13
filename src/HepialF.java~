@@ -920,7 +920,7 @@ class HepialF implements java_cup.runtime.Scanner {
           case 75: break;
           case 25: 
             { //System.out.println("I've seen sym.t_string "+yytext());
-    return new Symbol(sym.t_string, yytext());
+    return new Symbol(sym.t_string);
             }
           case 76: break;
           case 26: 

@@ -12,9 +12,9 @@ parser code {:
 
 non terminal AXIOM, PROGRAM, HEADER, DECLARATION, DECLARATIONS, DECLAVAR, LIDENT, DECLACONST, DECLAFONCT, TYPE, TYPEBASE, ARRAY, DIM, PARAM, BODY, INSTR, INSTRUCTIONS, READ, WRITE, ASSIGNMENT, RETURN, CONDTITION, WHILE, FOR, EXPR, ACCESS, INDEX, OPERAND, OPEBIN, OPEUN, FUNCCALL, PAREFF, INDICES;
 non terminal STARTFONC; // <- To avoid reduction conflicts
-terminal t_beginPrg, t_endPrg, t_prg, t_semicolon, t_coma, t_const, t_eq, t_openpar, t_closepar, t_beginfunc, t_endfunc, t_int, t_bool, t_opensq, t_closesq, t_doubledot, t_read, t_write, t_string, t_return, t_if, t_then, t_else, t_endif, t_while, t_do, t_endwhile, t_for, t_from, t_to, t_endfor, t_true, t_false, t_plus, t_minus, t_time, t_div, t_doubleq, t_diff, t_lt, t_gt, t_le, t_ge, t_and, t_or, t_notn, t_not;
+terminal t_beginPrg, t_endPrg, t_prg, t_semicolon, t_coma, t_const, t_eq, t_openpar, t_closepar, t_beginfunc, t_endfunc, t_int, t_bool, t_opensq, t_closesq, t_doubledot, t_read, t_write, t_return, t_if, t_then, t_else, t_endif, t_while, t_do, t_endwhile, t_for, t_from, t_to, t_endfor, t_true, t_false, t_plus, t_minus, t_time, t_div, t_doubleq, t_diff, t_lt, t_gt, t_le, t_ge, t_and, t_or, t_notn, t_not;
 terminal int t_intConst;
-terminal String t_ident;
+terminal String t_ident, t_string;
 
 precedence left t_plus, t_minus, t_time, t_div, t_doubleq, t_diff;
 precedence left t_lt, t_gt, t_le, t_ge, t_and, t_or, t_doubledot;
@@ -97,7 +97,18 @@ INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
 READ ::= t_read t_ident t_semicolon;
 
-WRITE ::= t_write EXPR t_semicolon | t_write t_string t_semicolon;
+WRITE ::= t_write EXPR t_semicolon {:
+    Expression content = (Expression) treeStack.pop();
+    Write write = new Write(HepialF.line, content);
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(write);
+:};
+
+WRITE ::= t_write t_string:s t_semicolon {:
+    Write write = new Write(HepialF.line, (String)s);
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(write);
+:};
 
 ASSIGNMENT ::= ACCESS t_eq EXPR t_semicolon {:
     //EXPR
@@ -120,7 +131,14 @@ CONDTITION ::= t_if EXPR t_then BODY t_else BODY t_endif {:
     currentBlock.getInstructions().add(cond);
 :};
 
-WHILE ::= t_while EXPR t_do BODY t_endwhile;
+WHILE ::= t_while EXPR t_do BODY t_endwhile {:
+    Block body = (Block) treeStack.pop();
+    Expression cnd = (Expression) treeStack.pop();
+
+    While loop = new While(HepialF.line, cnd, body.getInstructions());
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(loop);
+:};
 
 FOR ::= t_for t_ident:n t_from EXPR t_to EXPR t_do BODY t_endfor {:
     Block body = (Block) treeStack.pop();
@@ -177,7 +195,15 @@ EXPR ::= EXPR OPEBIN:op EXPR {:
     }
 :};
 
-EXPR ::= OPEUN EXPR;
+EXPR ::= OPEUN:op EXPR {:
+    Expression right = (Expression) treeStack.pop();
+    if(op.equals("non")) {
+        treeStack.push(new Not(right));
+    } else {
+        treeStack.push(new BitNot(right));
+    }
+:};
+
 EXPR ::= t_openpar EXPR t_closepar;
 EXPR ::=  OPERAND;
 
@@ -196,7 +222,7 @@ OPERAND ::= t_intConst:i {:
 
 OPEBIN ::= t_plus {: RESULT = "+"; :} | t_minus  {: RESULT = "-"; :} | t_time  {: RESULT = "*"; :} | t_div  {: RESULT = "/"; :} | t_doubleq  {: RESULT = "=="; :} | t_diff  {: RESULT = "<>"; :} | t_lt {: RESULT = "<"; :} | t_gt  {: RESULT = ">"; :} | t_le  {: RESULT = "<="; :} | t_ge  {: RESULT = ">="; :} | t_and {: RESULT = "et"; :} | t_or {: RESULT = "ou"; :};
 
-OPEUN ::= t_not | t_notn;
+OPEUN ::= t_not {: RESULT = "non"; :} | t_notn {: RESULT = "~"; :};
 
 FUNCCALL ::= t_ident t_openpar t_closepar | t_ident t_openpar PAREFF t_closepar;
 

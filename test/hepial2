@@ -3,7 +3,6 @@ programme hepial2
 entier c,b;
 
 debutprg
-
 	lire c;
 	lire b;
 	si (c>=b) alors

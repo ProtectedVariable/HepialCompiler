@@ -155,7 +155,7 @@ INTCONST=(({NOTN}?)([0-9])+)
 
 {STRING} {
 	//System.out.println("I've seen sym.t_string "+yytext());
-    return new Symbol(sym.t_string);
+    return new Symbol(sym.t_string, yytext());
 }
 
 {RETUR} {

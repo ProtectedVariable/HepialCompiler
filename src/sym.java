@@ -7,55 +7,55 @@
 public class sym {
   /* terminals */
   public static final int t_closepar = 10;
-  public static final int t_endwhile = 28;
-  public static final int t_for = 29;
-  public static final int t_true = 33;
+  public static final int t_endwhile = 27;
+  public static final int t_for = 28;
+  public static final int t_true = 32;
   public static final int t_coma = 6;
-  public static final int t_not = 48;
-  public static final int t_and = 45;
-  public static final int t_false = 34;
-  public static final int t_endfor = 32;
-  public static final int t_notn = 47;
-  public static final int t_lt = 41;
-  public static final int t_div = 38;
-  public static final int t_from = 30;
-  public static final int t_or = 46;
-  public static final int t_return = 21;
-  public static final int t_else = 24;
+  public static final int t_not = 47;
+  public static final int t_and = 44;
+  public static final int t_false = 33;
+  public static final int t_endfor = 31;
+  public static final int t_notn = 46;
+  public static final int t_lt = 40;
+  public static final int t_div = 37;
+  public static final int t_from = 29;
+  public static final int t_or = 45;
+  public static final int t_return = 20;
+  public static final int t_else = 23;
   public static final int t_closesq = 16;
   public static final int t_read = 18;
-  public static final int t_if = 22;
-  public static final int t_le = 43;
+  public static final int t_if = 21;
+  public static final int t_le = 42;
   public static final int t_const = 7;
-  public static final int t_then = 23;
+  public static final int t_then = 22;
   public static final int t_semicolon = 5;
-  public static final int t_diff = 40;
+  public static final int t_diff = 39;
   public static final int t_doubledot = 17;
-  public static final int t_minus = 36;
+  public static final int t_minus = 35;
   public static final int t_eq = 8;
   public static final int t_write = 19;
   public static final int EOF = 0;
   public static final int t_beginPrg = 2;
   public static final int error = 1;
-  public static final int t_string = 20;
-  public static final int t_to = 31;
+  public static final int t_string = 50;
+  public static final int t_to = 30;
   public static final int t_openpar = 9;
-  public static final int t_intConst = 49;
-  public static final int t_time = 37;
+  public static final int t_intConst = 48;
+  public static final int t_time = 36;
   public static final int t_beginfunc = 11;
-  public static final int t_gt = 42;
-  public static final int t_do = 27;
-  public static final int t_ident = 50;
+  public static final int t_gt = 41;
+  public static final int t_do = 26;
+  public static final int t_ident = 49;
   public static final int t_endPrg = 3;
   public static final int t_bool = 14;
   public static final int t_endfunc = 12;
-  public static final int t_endif = 25;
-  public static final int t_ge = 44;
-  public static final int t_plus = 35;
+  public static final int t_endif = 24;
+  public static final int t_ge = 43;
   public static final int t_opensq = 15;
-  public static final int t_doubleq = 39;
+  public static final int t_plus = 34;
+  public static final int t_doubleq = 38;
   public static final int t_int = 13;
-  public static final int t_while = 26;
+  public static final int t_while = 25;
   public static final int t_prg = 4;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -78,7 +78,6 @@ public class sym {
   "t_doubledot",
   "t_read",
   "t_write",
-  "t_string",
   "t_return",
   "t_if",
   "t_then",
@@ -108,7 +107,8 @@ public class sym {
   "t_notn",
   "t_not",
   "t_intConst",
-  "t_ident"
+  "t_ident",
+  "t_string"
   };
 }
 

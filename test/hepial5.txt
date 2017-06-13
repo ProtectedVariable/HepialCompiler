@@ -3,14 +3,14 @@ programme hepial5
 entier n;
 entier result;
 
-entier facto( entier n)
+entier facto( entier k)
 entier x;
 debutfonc
 	x=0;
-	si n == 0 alors
+	si k == 0 alors
 		retourne(1);
 	sinon
-		retourne(n*facto(n-1));
+		retourne(k*facto(k-1));
 	finsi
 finfonc
 

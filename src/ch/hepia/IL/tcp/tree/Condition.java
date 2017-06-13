@@ -25,7 +25,7 @@ public class Condition extends Instruction {
 		for (Instruction instruction : then) {
 			sb.append(instruction).append("\n");
 		}
-		sb.append(" } else {");
+		sb.append(" } else {\n");
 		for (Instruction instruction : _else) {
 			sb.append(instruction).append("\n");
 		}
