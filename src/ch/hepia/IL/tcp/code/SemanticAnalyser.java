@@ -3,6 +3,7 @@ package ch.hepia.IL.tcp.code;
 import ch.hepia.IL.tcp.tree.Addition;
 import ch.hepia.IL.tcp.tree.And;
 import ch.hepia.IL.tcp.tree.Assignment;
+import ch.hepia.IL.tcp.tree.Binary;
 import ch.hepia.IL.tcp.tree.BitNot;
 import ch.hepia.IL.tcp.tree.Block;
 import ch.hepia.IL.tcp.tree.Call;
@@ -37,8 +38,13 @@ public class SemanticAnalyser implements Visitor {
 		return instance;
 	}
 	
+	public void verifyBinary(Binary b) {
+		
+	}
+	
 	@Override
 	public Object visit(Addition a) {
+		verifyBinary(a);
 		
 		return null;
 	}

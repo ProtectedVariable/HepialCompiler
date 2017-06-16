@@ -8,5 +8,13 @@ public abstract class Binary extends Expression {
 		this.right = right;
 	}
 
+	public Expression getLeft() {
+		return left;
+	}
+
+	public Expression getRight() {
+		return right;
+	}
+
 	
 }
