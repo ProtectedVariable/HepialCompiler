@@ -1,5 +1,7 @@
 package ch.hepia.IL.tcp.tree;
 
+import ch.hepia.IL.tcp.code.Visitor;
+
 public class And extends Arithmetic {
 
 	public And(Expression left, Expression right) {
@@ -7,7 +9,7 @@ public class And extends Arithmetic {
 	}
 
 	@Override
-	public AbstractTree accept(AbstractTree o) {
+	public Object accept(Visitor v) {
 		// TODO Auto-generated method stub
 		return null;
 	}

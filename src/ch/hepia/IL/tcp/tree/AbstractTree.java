@@ -1,7 +1,9 @@
 package ch.hepia.IL.tcp.tree;
 
-public interface AbstractTree {
+import ch.hepia.IL.tcp.code.Visitor;
 
-	AbstractTree accept(AbstractTree o);
+public interface AbstractTree {
+	
+	Object accept(Visitor v);
 	
 }

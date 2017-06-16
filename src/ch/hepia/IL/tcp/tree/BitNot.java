@@ -1,5 +1,7 @@
 package ch.hepia.IL.tcp.tree;
 
+import ch.hepia.IL.tcp.code.Visitor;
+
 public class BitNot extends Unary {
 
 	public BitNot(Expression right) {
@@ -7,7 +9,7 @@ public class BitNot extends Unary {
 	}
 
 	@Override
-	public AbstractTree accept(AbstractTree o) {
+	public Object accept(Visitor v) {
 		// TODO Auto-generated method stub
 		return null;
 	}

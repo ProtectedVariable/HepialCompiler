@@ -2,6 +2,8 @@ package ch.hepia.IL.tcp.tree;
 
 import java.util.List;
 
+import ch.hepia.IL.tcp.code.Visitor;
+
 public class For extends Instruction {
 
 	private Idf idf;
@@ -17,7 +19,7 @@ public class For extends Instruction {
 	}
 
 	@Override
-	public AbstractTree accept(AbstractTree o) {
+	public Object accept(Visitor v) {
 		// TODO Auto-generated method stub
 		return null;
 	}

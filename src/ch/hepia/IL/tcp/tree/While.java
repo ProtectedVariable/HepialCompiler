@@ -2,6 +2,8 @@ package ch.hepia.IL.tcp.tree;
 
 import java.util.List;
 
+import ch.hepia.IL.tcp.code.Visitor;
+
 public class While extends Instruction {
 
 	private Expression condition;
@@ -14,7 +16,7 @@ public class While extends Instruction {
 	}
 
 	@Override
-	public AbstractTree accept(AbstractTree o) {
+	public Object accept(Visitor v) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -2,6 +2,8 @@ package ch.hepia.IL.tcp.tree;
 
 import java.util.List;
 
+import ch.hepia.IL.tcp.code.Visitor;
+
 public class Condition extends Instruction {
 	private Expression condition;
 	private List<Instruction> then,_else;
@@ -14,7 +16,7 @@ public class Condition extends Instruction {
 	}
 
 	@Override
-	public AbstractTree accept(AbstractTree o) {
+	public Object accept(Visitor v) {
 		return null;
 	}
 	

@@ -2,21 +2,19 @@ package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
-public class Not extends Unary {
+public class Read extends Instruction {
 
-	public Not(Expression right) {
-		super(right);
+	private Idf dest;
+	
+	public Read(int line, Idf dest) {
+		super(line);
+		this.dest = dest;
 	}
 
 	@Override
 	public Object accept(Visitor v) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	@Override
-	public String toString() {
-		return "!"+right;
 	}
 
 }

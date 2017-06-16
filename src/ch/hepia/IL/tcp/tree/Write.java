@@ -1,5 +1,7 @@
 package ch.hepia.IL.tcp.tree;
 
+import ch.hepia.IL.tcp.code.Visitor;
+
 public class Write extends Instruction {
 	
 	private Expression content;
@@ -16,7 +18,7 @@ public class Write extends Instruction {
 	}
 
 	@Override
-	public AbstractTree accept(AbstractTree o) {
+	public Object accept(Visitor v) {
 		// TODO Auto-generated method stub
 		return null;
 	}
