@@ -10,8 +10,7 @@ public class Inferior extends Relation {
 
 	@Override
 	public Object accept(Visitor v) {
-		// TODO Auto-generated method stub
-		return null;
+		return v.visit(this);
 	}
 
 	@Override

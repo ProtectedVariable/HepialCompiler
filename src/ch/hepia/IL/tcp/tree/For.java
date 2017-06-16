@@ -17,11 +17,10 @@ public class For extends Instruction {
 		this.supLimit = supLimit;
 		this.instructions = instructions;
 	}
-
+	
 	@Override
 	public Object accept(Visitor v) {
-		// TODO Auto-generated method stub
-		return null;
+		return v.visit(this);
 	}
 	
 	@Override

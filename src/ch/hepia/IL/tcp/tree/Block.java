@@ -16,8 +16,7 @@ public class Block extends Instruction {
 
 	@Override
 	public Object accept(Visitor v) {
-		// TODO Auto-generated method stub
-		return null;
+		return v.visit(this);
 	}
 
 	public List<Instruction> getInstructions() {

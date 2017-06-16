@@ -17,7 +17,7 @@ public class Condition extends Instruction {
 
 	@Override
 	public Object accept(Visitor v) {
-		return null;
+		return v.visit(this);
 	}
 	
 	@Override

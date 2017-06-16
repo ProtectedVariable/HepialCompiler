@@ -11,8 +11,7 @@ public class NumberValue extends Expression {
 
 	@Override
 	public Object accept(Visitor v) {
-		// TODO Auto-generated method stub
-		return null;
+		return v.visit(this);
 	}
 	
 	@Override
