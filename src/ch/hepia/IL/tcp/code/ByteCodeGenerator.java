@@ -52,6 +52,7 @@ public class ByteCodeGenerator implements Visitor {
     
     public void Generate(AbstractTree t) {
     	t.accept(this);
+    	appendln(".end method"); //TODO Consider other functions
     	System.out.println(target.toString());
     }
     
@@ -85,6 +86,7 @@ public class ByteCodeGenerator implements Visitor {
 		Object local = a.getDest().accept(this);
 		a.getSource().accept(this);
 		appendln("istore "+((Integer)local).intValue());
+		appendln("pop");
 		return null;
 	}
 
@@ -167,19 +169,33 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(For f) {
-		//TODO 
-		f.getIdf().accept(this);
-		return null;
+		Integer local = (Integer)f.getIdf().accept(this);
+		appendln("pop");
+		appendln("for"+f.hashCode()+":");
+		f.getInfLimit().accept(this);
+		appendln("istore "+local.intValue());
+		f.getSupLimit().accept(this);
+		
+		appendln("isub");
+		appendln("ifeq endfor"+f.hashCode());
+		
+		for (Instruction i : f.getInstructions()) {
+			i.accept(this);
+		}
+		appendln("goto for"+f.hashCode());
+		
+		appendln("endfor"+f.hashCode()+":");
+ 		return null;
 	}
 
 	@Override
 	public Object visit(Idf i) {
+		//TODO BUGGY !!! WILL CHANGE LOCAL ID FOR EACH CALL (BECAUSE IT'S A NEW IDF EACH TIME)
 		if(i.getLocal() == -1) {
 			i.setLocal(nextLocal);
 			nextLocal++;
-		} else {
-			appendln("iload "+i.getLocal());
 		}
+		appendln("iload "+i.getLocal());
 		return new Integer(i.getLocal());
 	}
 
