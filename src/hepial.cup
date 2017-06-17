@@ -27,6 +27,7 @@ AXIOM ::= PROGRAM {:
     System.out.println("AbstractTree stack size "+treeStack.size());
     System.out.println(treeStack.peek());
     SemanticAnalyser.getInstance().analyze(treeStack.peek());
+    ByteCodeGenerator.getInstance().Generate(treeStack.peek());
 :};
 
 PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg;

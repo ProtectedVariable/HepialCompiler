@@ -194,6 +194,9 @@ public class SemanticAnalyser implements Visitor {
 	@Override
 	public Object visit(Condition c) {
 		c.getCondition().accept(this);
+		if(!c.getCondition().getType().isValid(BoolType.getInstance())) {
+			ErrorHandler.addError("Condition must be boolean type", c.getLine());
+		}
 		for (Instruction i : c.getThen()) {
 			i.accept(this);
 		}

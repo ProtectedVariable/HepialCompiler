@@ -454,6 +454,7 @@ class CUP$parser$actions {
     System.out.println("AbstractTree stack size "+treeStack.size());
     System.out.println(treeStack.peek());
     SemanticAnalyser.getInstance().analyze(treeStack.peek());
+    ByteCodeGenerator.getInstance().Generate(treeStack.peek());
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("AXIOM",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

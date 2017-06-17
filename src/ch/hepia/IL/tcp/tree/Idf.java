@@ -8,8 +8,11 @@ public class Idf extends Expression {
 	private String name;
 	private Type type;
 	
+	private int local;
+	
 	public Idf(String name) {
 		this.name = name;
+		this.local = -1;
 	}
 
 	@Override
@@ -33,6 +36,14 @@ public class Idf extends Expression {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public int getLocal() {
+		return local;
+	}
+
+	public void setLocal(int local) {
+		this.local = local;
 	}
 
 }
