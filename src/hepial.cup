@@ -2,6 +2,7 @@ import java.util.*;
 import ch.hepia.IL.tcp.*;
 import ch.hepia.IL.tcp.types.*;
 import ch.hepia.IL.tcp.tree.*;
+import ch.hepia.IL.tcp.code.*;
 
 parser code {:
     List<String> identifiers = new LinkedList<>();
@@ -25,6 +26,7 @@ AXIOM ::= PROGRAM {:
     System.out.println(SymbolTable.getInstance());
     System.out.println("AbstractTree stack size "+treeStack.size());
     System.out.println(treeStack.peek());
+    SemanticAnalyser.getInstance().analyze(treeStack.peek());
 :};
 
 PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg;
@@ -92,7 +94,7 @@ DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
 PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}
 | PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
 
-BODY ::= {: treeStack.push(new Block(HepialF.line)); :} INSTRUCTIONS; //TODO check
+BODY ::= {: treeStack.push(new Block(HepialF.line)); :} INSTRUCTIONS;
 INSTRUCTIONS ::= INSTR INSTRUCTIONS |;
 INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
@@ -146,8 +148,14 @@ FOR ::= t_for t_ident:n t_from EXPR t_to EXPR t_do BODY t_endfor {:
 
     Expression to = (Expression) treeStack.pop();
     Expression from = (Expression) treeStack.pop();
-
-    For loop = new For(HepialF.line, new Idf(n), from, to, body.getInstructions());
+    Idf id = new Idf(n);
+    SymbolHEPIAL sh = SymbolTable.getInstance().identify(new Entry(n));
+    if(sh == null) {
+        ErrorHandler.addError("Symbol "+n+" not found", HepialF.line);
+    } else {
+        id.setType(sh.getType());
+    }
+    For loop = new For(HepialF.line, id, from, to, body.getInstructions());
     Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(loop);
 :};
@@ -209,7 +217,14 @@ EXPR ::= t_openpar EXPR t_closepar;
 EXPR ::=  OPERAND;
 
 ACCESS ::= t_ident:n {:
-    treeStack.push(new Idf((String)n));
+    Idf id = new Idf((String)n);
+    SymbolHEPIAL sh = SymbolTable.getInstance().identify(new Entry(n));
+    if(sh == null) {
+        ErrorHandler.addError("Symbol "+n+" not found", HepialF.line);
+    } else {
+        id.setType(sh.getType());
+    }
+    treeStack.push(id);
 :};
 ACCESS ::= t_ident INDICES;//TODO
 

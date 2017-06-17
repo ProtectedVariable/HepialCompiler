@@ -7,6 +7,7 @@ import java.util.*;
 import ch.hepia.IL.tcp.*;
 import ch.hepia.IL.tcp.types.*;
 import ch.hepia.IL.tcp.tree.*;
+import ch.hepia.IL.tcp.code.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -452,6 +453,7 @@ class CUP$parser$actions {
     System.out.println(SymbolTable.getInstance());
     System.out.println("AbstractTree stack size "+treeStack.size());
     System.out.println(treeStack.peek());
+    SemanticAnalyser.getInstance().analyze(treeStack.peek());
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("AXIOM",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -972,8 +974,14 @@ class CUP$parser$actions {
 
     Expression to = (Expression) treeStack.pop();
     Expression from = (Expression) treeStack.pop();
-
-    For loop = new For(HepialF.line, new Idf(n), from, to, body.getInstructions());
+    Idf id = new Idf(n);
+    SymbolHEPIAL sh = SymbolTable.getInstance().identify(new Entry(n));
+    if(sh == null) {
+        ErrorHandler.addError("Symbol "+n+" not found", HepialF.line);
+    } else {
+        id.setType(sh.getType());
+    }
+    For loop = new For(HepialF.line, id, from, to, body.getInstructions());
     Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(loop);
 
@@ -1080,7 +1088,14 @@ class CUP$parser$actions {
 		int nright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String n = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    treeStack.push(new Idf((String)n));
+    Idf id = new Idf((String)n);
+    SymbolHEPIAL sh = SymbolTable.getInstance().identify(new Entry(n));
+    if(sh == null) {
+        ErrorHandler.addError("Symbol "+n+" not found", HepialF.line);
+    } else {
+        id.setType(sh.getType());
+    }
+    treeStack.push(id);
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ACCESS",25, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

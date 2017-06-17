@@ -1,6 +1,8 @@
 package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
+import ch.hepia.IL.tcp.types.IntType;
+import ch.hepia.IL.tcp.types.Type;
 
 public class NumberValue extends Expression {
 	private int value;
@@ -19,4 +21,12 @@ public class NumberValue extends Expression {
 		return String.valueOf(value);
 	}
 	
+	@Override
+	public Type getType() {
+		return IntType.getInstance();
+	}
+
+	public int getValue() {
+		return value;
+	}
 }

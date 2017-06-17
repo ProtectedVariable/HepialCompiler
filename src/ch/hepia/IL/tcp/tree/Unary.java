@@ -6,4 +6,8 @@ public abstract class Unary extends Expression {
 	public Unary(Expression right) {
 		this.right = right;
 	}
+
+	public Expression getRight() {
+		return right;
+	}
 }

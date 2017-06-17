@@ -7,5 +7,9 @@ public abstract class Instruction implements AbstractTree {
 	public Instruction(int line) {
 		this.line = line;
 	}
+
+	public int getLine() {
+		return line;
+	}
 	
 }

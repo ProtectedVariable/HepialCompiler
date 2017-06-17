@@ -1,6 +1,8 @@
 package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
+import ch.hepia.IL.tcp.types.IntType;
+import ch.hepia.IL.tcp.types.Type;
 
 public class Substraction extends Arithmetic {
 
@@ -16,5 +18,10 @@ public class Substraction extends Arithmetic {
 	@Override
 	public String toString() {
 		return left+" - "+right;
+	}
+	
+	@Override
+	public Type getType() {
+		return IntType.getInstance();
 	}
 }

@@ -1,6 +1,8 @@
 package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
+import ch.hepia.IL.tcp.types.IntType;
+import ch.hepia.IL.tcp.types.Type;
 
 public class Or extends Arithmetic {
 
@@ -16,6 +18,11 @@ public class Or extends Arithmetic {
 	@Override
 	public String toString() {
 		return left+" | "+right;
+	}
+	
+	@Override
+	public Type getType() {
+		return IntType.getInstance();
 	}
 
 }

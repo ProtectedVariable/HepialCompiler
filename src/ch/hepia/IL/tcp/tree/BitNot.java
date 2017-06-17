@@ -1,6 +1,8 @@
 package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
+import ch.hepia.IL.tcp.types.IntType;
+import ch.hepia.IL.tcp.types.Type;
 
 public class BitNot extends Unary {
 
@@ -16,5 +18,10 @@ public class BitNot extends Unary {
 	@Override
 	public String toString() {
 		return "~"+right;
+	}
+
+	@Override
+	public Type getType() {
+		return IntType.getInstance();
 	}
 }

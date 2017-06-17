@@ -13,4 +13,16 @@ public abstract class SymbolHEPIAL {
 		this.type = t;
 		this.bloc = bloc;
 	}
+
+	public int getLine() {
+		return line;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public int getBloc() {
+		return bloc;
+	}
 }

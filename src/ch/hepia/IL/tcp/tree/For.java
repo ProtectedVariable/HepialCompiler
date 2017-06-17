@@ -33,4 +33,28 @@ public class For extends Instruction {
 		sb.append("}");
 		return sb.toString();
 	}
+
+	public Idf getIdf() {
+		return idf;
+	}
+
+	public Expression getInfLimit() {
+		return infLimit;
+	}
+
+	public Expression getSupLimit() {
+		return supLimit;
+	}
+
+	public List<Instruction> getInstructions() {
+		return instructions;
+	}
+
+	public void setInfLimit(Expression infLimit) {
+		this.infLimit = infLimit;
+	}
+
+	public void setSupLimit(Expression supLimit) {
+		this.supLimit = supLimit;
+	}
 }

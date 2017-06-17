@@ -10,6 +10,8 @@ public interface Visitor {
 	
 	Object visit(BitNot b);
 	Object visit(Block b);
+	Object visit(BoolValue b);
+
 	
 	Object visit(Call c);
 	Object visit(Condition c);

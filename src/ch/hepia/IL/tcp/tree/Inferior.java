@@ -1,6 +1,8 @@
 package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
+import ch.hepia.IL.tcp.types.BoolType;
+import ch.hepia.IL.tcp.types.Type;
 
 public class Inferior extends Relation {
 
@@ -16,6 +18,11 @@ public class Inferior extends Relation {
 	@Override
 	public String toString() {
 		return left+" < "+right;
+	}
+	
+	@Override
+	public Type getType() {
+		return BoolType.getInstance();
 	}
 	
 }

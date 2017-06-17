@@ -1,6 +1,8 @@
 package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
+import ch.hepia.IL.tcp.types.IntType;
+import ch.hepia.IL.tcp.types.Type;
 
 public class Product extends Arithmetic {
 
@@ -18,4 +20,8 @@ public class Product extends Arithmetic {
 		return left +" * "+right;
 	}
 
+	@Override
+	public Type getType() {
+		return IntType.getInstance();
+	}
 }

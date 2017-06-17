@@ -32,7 +32,7 @@ public class SymbolTable {
 		if (identify(e) == null) {
 			this.table.put(e, new ArrayList<>());
 		}
-		for (SymbolHEPIAL sh : identify(e)) {
+		for (SymbolHEPIAL sh : table.get(e)) {
 			if(blocs.contains(sh.bloc)) {
 				throw new RuntimeException("Double declaration of symbol "+e.identifier+" (first declared at line "+sh.line+")");
 			}
@@ -41,8 +41,14 @@ public class SymbolTable {
 		this.table.get(e).add(s);
 	}
 
-	public List<SymbolHEPIAL> identify(Entry e) {
-		return table.get(e);
+	public SymbolHEPIAL identify(Entry e) {
+		if(table.get(e) == null) return null;
+		for (SymbolHEPIAL sh : table.get(e)) {
+			if(blocs.contains(sh.bloc)) {
+				return sh;
+			}
+		}
+		return null;
 	}
 
 	public void enterBlock() {

@@ -33,6 +33,18 @@ public class Condition extends Instruction {
 		}
 		sb.append("}");
 		return sb.toString();
+	}
+
+	public Expression getCondition() {
+		return condition;
+	}
+
+	public List<Instruction> getThen() {
+		return then;
+	}
+
+	public List<Instruction> get_else() {
+		return _else;
 	} 
 	
 }

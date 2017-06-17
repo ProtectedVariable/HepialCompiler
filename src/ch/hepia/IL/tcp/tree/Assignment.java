@@ -21,5 +21,17 @@ public class Assignment extends Instruction {
 	public String toString() {
 		return dest +" = "+source;
 	}
+
+	public Expression getSource() {
+		return source;
+	}
+
+	public Expression getDest() {
+		return dest;
+	}
+
+	public void setSource(Expression source) {
+		this.source = source;
+	}
 	
 }

@@ -1,6 +1,7 @@
 all: run
 	javac ch/hepia/IL/tcp/tree/*.java
 	javac ch/hepia/IL/tcp/types/*.java
+	javac ch/hepia/IL/tcp/code/*.java
 FILE=../test/test.hepial
 
 Test.class: HepialF.java hepial.cup Test.java

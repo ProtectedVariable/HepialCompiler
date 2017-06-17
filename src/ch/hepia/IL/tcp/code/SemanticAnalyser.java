@@ -1,11 +1,13 @@
 package ch.hepia.IL.tcp.code;
 
+import ch.hepia.IL.tcp.tree.AbstractTree;
 import ch.hepia.IL.tcp.tree.Addition;
 import ch.hepia.IL.tcp.tree.And;
 import ch.hepia.IL.tcp.tree.Assignment;
 import ch.hepia.IL.tcp.tree.Binary;
 import ch.hepia.IL.tcp.tree.BitNot;
 import ch.hepia.IL.tcp.tree.Block;
+import ch.hepia.IL.tcp.tree.BoolValue;
 import ch.hepia.IL.tcp.tree.Call;
 import ch.hepia.IL.tcp.tree.Condition;
 import ch.hepia.IL.tcp.tree.Different;
@@ -15,6 +17,7 @@ import ch.hepia.IL.tcp.tree.For;
 import ch.hepia.IL.tcp.tree.Idf;
 import ch.hepia.IL.tcp.tree.InfEqual;
 import ch.hepia.IL.tcp.tree.Inferior;
+import ch.hepia.IL.tcp.tree.Instruction;
 import ch.hepia.IL.tcp.tree.Not;
 import ch.hepia.IL.tcp.tree.NumberValue;
 import ch.hepia.IL.tcp.tree.Or;
@@ -26,51 +29,160 @@ import ch.hepia.IL.tcp.tree.SupEqual;
 import ch.hepia.IL.tcp.tree.Superior;
 import ch.hepia.IL.tcp.tree.While;
 import ch.hepia.IL.tcp.tree.Write;
+import ch.hepia.IL.tcp.types.BoolType;
+import ch.hepia.IL.tcp.types.IntType;
 
 public class SemanticAnalyser implements Visitor {
 
 	private static SemanticAnalyser instance = null;
-	
-	private SemanticAnalyser() {}
-	
+
+	private SemanticAnalyser() {
+	}
+
 	public static SemanticAnalyser getInstance() {
-		if(instance == null) instance = new SemanticAnalyser();
+		if (instance == null)
+			instance = new SemanticAnalyser();
 		return instance;
 	}
-	
-	public void verifyBinary(Binary b) {
-		
+
+	public void analyze(AbstractTree t) {
+		t.accept(this);
+		System.out.println(ErrorHandler.getMessage());
+		System.out.println("Semantical analysis done...");
 	}
-	
+
+	public void verifyIntegerBinary(Binary b) {
+		b.getLeft().accept(this);
+		if (b.getLeft().getType() == null) {
+			ErrorHandler.addError("Unknown type of operand " + b.getLeft(), 0);
+			return;
+		}
+		if (!b.getLeft().getType().isValid(IntType.getInstance())) {
+			ErrorHandler.addError("Bad operand : expected integer (" + b.getLeft() + ")", 0);
+		}
+
+		b.getRight().accept(this);
+		if (b.getRight().getType() == null) {
+			ErrorHandler.addError("Unknown type of operand " + b.getRight(), 0);
+			return;
+		}
+		if (!b.getRight().getType().isValid(IntType.getInstance())) {
+			ErrorHandler.addError("Bad operand : expected integer (" + b.getRight() + ")", 0);
+		}
+	}
+
+	public void verifyBooleanBinary(Binary b) {
+		b.getLeft().accept(this);
+		if (b.getLeft().getType() == null) {
+			ErrorHandler.addError("Unknown type of operand " + b.getLeft(), 0);
+			return;
+		}
+		if (!b.getLeft().getType().isValid(BoolType.getInstance())) {
+			ErrorHandler.addError("Bad operand : expected boolean (" + b.getLeft() + ")", 0);
+		}
+
+		b.getRight().accept(this);
+		if (b.getRight().getType() == null) {
+			ErrorHandler.addError("Unknown type of operand " + b.getRight(), 0);
+			return;
+		}
+		if (!b.getRight().getType().isValid(BoolType.getInstance())) {
+			ErrorHandler.addError("Bad operand : expected boolean (" + b.getRight() + ")", 0);
+		}
+	}
+
+	public void verifyAnyBinary(Binary b) {
+		b.getLeft().accept(this);
+		b.getRight().accept(this);
+		if (b.getLeft().getType() == null) {
+			ErrorHandler.addError("Unknown type of operand " + b.getLeft(), 0);
+			return;
+		}
+		if (b.getRight().getType() == null) {
+			ErrorHandler.addError("Unknown type of operand " + b.getRight(), 0);
+			return;
+		}
+		if (!b.getLeft().getType().isValid(b.getRight().getType())) {
+			ErrorHandler.addError("Operand type mismatch: " + b.getLeft() + " is of type " + b.getLeft().getType() + " but " + b.getRight() + " is of type " + b.getRight().getType(), 0);
+		}
+	}
+
 	@Override
 	public Object visit(Addition a) {
-		verifyBinary(a);
-		
-		return null;
+		verifyIntegerBinary(a);
+		Object valL = a.getLeft().accept(this);
+		if (valL == null)
+			return null;
+		Object valR = a.getRight().accept(this);
+		if (valR == null)
+			return null;
+		int l = ((Integer) valL).intValue();
+		int r = ((Integer) valR).intValue();
+		return new Integer(l + r);
 	}
 
 	@Override
 	public Object visit(And a) {
-		// TODO Auto-generated method stub
-		return null;
+		verifyIntegerBinary(a);
+		Object valL = a.getLeft().accept(this);
+		if (valL != null) {
+			int l = ((Integer) valL).intValue();
+			if (l == 0)
+				return 0;
+		}
+		Object valR = a.getRight().accept(this);
+		if (valR != null) {
+			int r = ((Integer) valR).intValue();
+			if (r == 0)
+				return 0;
+		}
+		if (valL == null || valR == null)
+			return null;
+		return new Integer(((Integer) valL).intValue() & ((Integer) valR).intValue());
 	}
 
 	@Override
 	public Object visit(Assignment a) {
-		// TODO Auto-generated method stub
+		Object s = a.getSource().accept(this);
+		a.getDest().accept(this);
+		if (!a.getSource().getType().isValid(a.getDest().getType())) {
+			ErrorHandler.addError("Type mismatch: trying to put " + a.getSource().getType() + " in " + a.getDest().getType(), a.getLine());
+		} else {
+			if (s != null) {
+				if (a.getDest().getType().isValid(IntType.getInstance())) {
+					a.setSource(new NumberValue((Integer) s));
+				} else {
+					a.setSource(new BoolValue((Boolean) s));
+				}
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(BitNot b) {
-		// TODO Auto-generated method stub
+		if (b.getRight().getType().isValid(IntType.getInstance())) {
+			Object valR = b.getRight().accept(this);
+			if (valR == null)
+				return null;
+			int r = ((Integer) valR).intValue();
+			return new Integer(~r);
+		}
+		ErrorHandler.addError("Bad operand : expected integer (" + b.getRight() + ")", 0);
 		return null;
 	}
 
 	@Override
 	public Object visit(Block b) {
-		// TODO Auto-generated method stub
+		for (Instruction i : b.getInstructions()) {
+			i.accept(this);
+		}
 		return null;
+	}
+
+	@Override
+	public Object visit(BoolValue b) {
+		return new Boolean(b.isValue());
 	}
 
 	@Override
@@ -81,74 +193,122 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(Condition c) {
-		// TODO Auto-generated method stub
+		c.getCondition().accept(this);
+		for (Instruction i : c.getThen()) {
+			i.accept(this);
+		}
+		for (Instruction i : c.get_else()) {
+			i.accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(Different d) {
-		// TODO Auto-generated method stub
+		verifyAnyBinary(d);
 		return null;
 	}
 
 	@Override
 	public Object visit(Division d) {
-		// TODO Auto-generated method stub
-		return null;
+		verifyIntegerBinary(d);
+		Object valL = d.getLeft().accept(this);
+		if (valL == null)
+			return null;
+		Object valR = d.getRight().accept(this);
+		if (valR == null)
+			return null;
+		int l = ((Integer) valL).intValue();
+		int r = ((Integer) valR).intValue();
+		return new Integer(l / r);
 	}
 
 	@Override
 	public Object visit(Equal e) {
-		// TODO Auto-generated method stub
+		verifyAnyBinary(e);
 		return null;
 	}
 
 	@Override
 	public Object visit(For f) {
-		// TODO Auto-generated method stub
+		if (!f.getIdf().getType().isValid(IntType.getInstance())) {
+			ErrorHandler.addError("For variable must be an integer", f.getLine());
+		}
+		Object i = f.getInfLimit().accept(this);
+		Object s = f.getSupLimit().accept(this);
+
+		if (i != null) {
+			f.setInfLimit(new NumberValue(((Integer) i).intValue()));
+		}
+
+		if (s != null) {
+			f.setSupLimit(new NumberValue(((Integer) s).intValue()));
+		}
+
+		for (Instruction in : f.getInstructions()) {
+			in.accept(this);
+		}
+
 		return null;
 	}
 
 	@Override
 	public Object visit(Idf i) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visit(InfEqual i) {
-		// TODO Auto-generated method stub
+		verifyAnyBinary(i);
 		return null;
 	}
 
 	@Override
 	public Object visit(Inferior i) {
-		// TODO Auto-generated method stub
+		verifyAnyBinary(i);
 		return null;
 	}
 
 	@Override
 	public Object visit(Not n) {
-		// TODO Auto-generated method stub
-		return null;
+		Object valR = n.getRight().accept(this);
+		if (valR == null)
+			return null;
+		boolean r = ((Boolean) valR).booleanValue();
+		return new Boolean(!r);
 	}
 
 	@Override
 	public Object visit(NumberValue n) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Integer(n.getValue());
 	}
 
 	@Override
 	public Object visit(Or o) {
-		// TODO Auto-generated method stub
-		return null;
+		verifyIntegerBinary(o);
+		Object valL = o.getLeft().accept(this);
+		if (valL == null)
+			return null;
+		Object valR = o.getRight().accept(this);
+		if (valR == null)
+			return null;
+		int l = ((Integer) valL).intValue();
+		int r = ((Integer) valR).intValue();
+		return new Integer(l | r);
 	}
 
 	@Override
 	public Object visit(Product p) {
-		// TODO Auto-generated method stub
-		return null;
+		verifyIntegerBinary(p);
+		Object valL = p.getLeft().accept(this);
+		if (valL == null)
+			return null;
+		Object valR = p.getRight().accept(this);
+		if (valR == null)
+			return null;
+		int l = ((Integer) valL).intValue();
+		int r = ((Integer) valR).intValue();
+		return new Integer(l * r);
 	}
 
 	@Override
@@ -165,25 +325,36 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(Substraction s) {
-		// TODO Auto-generated method stub
-		return null;
+		verifyIntegerBinary(s);
+		Object valL = s.getLeft().accept(this);
+		if (valL == null)
+			return null;
+		Object valR = s.getRight().accept(this);
+		if (valR == null)
+			return null;
+		int l = ((Integer) valL).intValue();
+		int r = ((Integer) valR).intValue();
+		return new Integer(l - r);
 	}
 
 	@Override
 	public Object visit(SupEqual s) {
-		// TODO Auto-generated method stub
+		verifyAnyBinary(s);
 		return null;
 	}
 
 	@Override
 	public Object visit(Superior s) {
-		// TODO Auto-generated method stub
+		verifyAnyBinary(s);
 		return null;
 	}
 
 	@Override
 	public Object visit(While w) {
-		// TODO Auto-generated method stub
+		w.getCondition().accept(this);
+		for (Instruction i : w.getInstructions()) {
+			i.accept(this);
+		}
 		return null;
 	}
 
