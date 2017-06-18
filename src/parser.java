@@ -8,6 +8,7 @@ import ch.hepia.IL.tcp.*;
 import ch.hepia.IL.tcp.types.*;
 import ch.hepia.IL.tcp.tree.*;
 import ch.hepia.IL.tcp.code.*;
+import java.io.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -471,7 +472,15 @@ class CUP$parser$actions {
     System.out.println(treeStack.peek());
     SemanticAnalyser.getInstance().analyze(treeStack.peek());
     if(ErrorHandler.canGenerate()) {
-        ByteCodeGenerator.getInstance().Generate(treeStack.peek());
+        String code = ByteCodeGenerator.getInstance().Generate(treeStack.peek());
+        try {
+            PrintWriter writer = new PrintWriter("hepial.j", "UTF-8");
+            writer.println(code);
+            writer.close();
+            System.out.println("Bytecode was written to hepial.j");
+        } catch (IOException e) {
+            System.out.println("Coulnd't write bytecode to file...\n"+code);
+        }
     }
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("AXIOM",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);

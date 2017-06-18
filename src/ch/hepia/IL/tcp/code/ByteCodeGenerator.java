@@ -85,9 +85,9 @@ public class ByteCodeGenerator implements Visitor {
 		appendln(".end method ");
 	}
 
-	public void Generate(AbstractTree t) {
+	public String Generate(AbstractTree t) {
 		t.accept(this);
-		System.out.println(target.toString());
+		return target.toString();
 	}
 
 	public static ByteCodeGenerator getInstance() {
@@ -143,21 +143,21 @@ public class ByteCodeGenerator implements Visitor {
 			if (!a.getFnames().get(i).equals("main")) {
 				Function f = (Function) SymbolTable.getInstance().identify(new Entry(a.getFnames().get(i)));
 				String params = "";
-				String pa = "";
 				for (int k = 0; k < f.getParams().size(); k++) {
 					params = params + "I"; // we only deal with integer since bool = int
 					this.visit(new Idf(f.getPnames().get(i)));
 				}
-				
+				nextLocal = f.getParams().size();
 				appendln(".method public static " + a.getFnames().get(i) + "(" + params + ")I");
 				appendln(".limit stack " + SymbolTable.getInstance().getSize());
 				appendln(".limit locals " + SymbolTable.getInstance().getSize() * 2);
-				appendln(pa);
 				a.getFunctions().get(i).accept(this);
+				locals.clear();
 				appendln("ldc 0");
 				appendln("ireturn");
 				appendln(".end method");
 			} else {
+				nextLocal = 0;
 				appendln(".method public static main([Ljava/lang/String;)V");
 				appendln(".limit stack " + (SymbolTable.getInstance().getSize() + 4));
 				appendln(".limit locals " + SymbolTable.getInstance().getSize() * 4);

@@ -16,6 +16,8 @@ HepialF.java: hepial.flex
 
 run: Test.class
 	java -classpath .:java-cup-11b.jar Test $(FILE)
+	java -jar jasmin.jar hepial.j
+	java hepial
 
 %.class: %.java
 	javac -classpath .:java-cup-11b.jar $^

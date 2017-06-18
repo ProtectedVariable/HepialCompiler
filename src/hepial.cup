@@ -3,6 +3,7 @@ import ch.hepia.IL.tcp.*;
 import ch.hepia.IL.tcp.types.*;
 import ch.hepia.IL.tcp.tree.*;
 import ch.hepia.IL.tcp.code.*;
+import java.io.*;
 
 parser code {:
     List<String> identifiers = new LinkedList<>();
@@ -32,7 +33,15 @@ AXIOM ::= {: treeStack.push(new Axiom()); :} PROGRAM {:
     System.out.println(treeStack.peek());
     SemanticAnalyser.getInstance().analyze(treeStack.peek());
     if(ErrorHandler.canGenerate()) {
-        ByteCodeGenerator.getInstance().Generate(treeStack.peek());
+        String code = ByteCodeGenerator.getInstance().Generate(treeStack.peek());
+        try {
+            PrintWriter writer = new PrintWriter("hepial.j", "UTF-8");
+            writer.println(code);
+            writer.close();
+            System.out.println("Bytecode was written to hepial.j");
+        } catch (IOException e) {
+            System.out.println("Coulnd't write bytecode to file...\n"+code);
+        }
     }
 :};
 
