@@ -34,5 +34,9 @@ public class Write extends Instruction {
 	public String toString() {
 		return "Write "+(content==null?constant:content.toString());
 	}
+
+	public String getConstant() {
+		return constant;
+	}
 	
 }

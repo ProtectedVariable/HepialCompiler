@@ -1,10 +1,13 @@
 package ch.hepia.IL.tcp.code;
 
+import java.util.HashMap;
+
 import ch.hepia.IL.tcp.SymbolTable;
 import ch.hepia.IL.tcp.tree.AbstractTree;
 import ch.hepia.IL.tcp.tree.Addition;
 import ch.hepia.IL.tcp.tree.And;
 import ch.hepia.IL.tcp.tree.Assignment;
+import ch.hepia.IL.tcp.tree.Binary;
 import ch.hepia.IL.tcp.tree.BitNot;
 import ch.hepia.IL.tcp.tree.Block;
 import ch.hepia.IL.tcp.tree.BoolValue;
@@ -35,8 +38,10 @@ public class ByteCodeGenerator implements Visitor {
 	private static ByteCodeGenerator instance;
     private StringBuilder target;
     private int nextLocal = 0;
+    private HashMap<String, Integer> locals;
     
     private ByteCodeGenerator() {
+    	locals = new HashMap<>();
     	target = new StringBuilder();
     	target.append(".class public simple\n"
     			+ ".super java/lang/Object\n"
@@ -52,6 +57,7 @@ public class ByteCodeGenerator implements Visitor {
     
     public void Generate(AbstractTree t) {
     	t.accept(this);
+    	appendln("return");
     	appendln(".end method"); //TODO Consider other functions
     	System.out.println(target.toString());
     }
@@ -65,18 +71,27 @@ public class ByteCodeGenerator implements Visitor {
 		target.append(ln).append("\n");
 	}
 	
+	public void visitBinary(Binary b) {
+		Object l = b.getLeft().accept(this);
+		Object r = b.getRight().accept(this);
+		if(l != null) {
+			appendln("iload "+(Integer)l);
+		} 
+		if(r != null) {
+			appendln("iload "+(Integer)r);
+		}
+	}
+	
 	@Override
 	public Object visit(Addition a) {
-		a.getLeft().accept(this);
-		a.getRight().accept(this);
+		visitBinary(a);
 		appendln("iadd");
 		return null;
 	}
 
 	@Override
 	public Object visit(And a) {
-		a.getLeft().accept(this);
-		a.getRight().accept(this);
+		visitBinary(a);
 		appendln("iand");
 		return null;
 	}
@@ -86,13 +101,15 @@ public class ByteCodeGenerator implements Visitor {
 		Object local = a.getDest().accept(this);
 		a.getSource().accept(this);
 		appendln("istore "+((Integer)local).intValue());
-		appendln("pop");
 		return null;
 	}
 
 	@Override
 	public Object visit(BitNot b) {
-		b.getRight().accept(this);
+		Object r = b.getRight().accept(this);
+		if(r != null) {
+			appendln("iload "+(Integer)r);
+		}
 		appendln("ineg");
 		appendln("ldc 1");
 		appendln("isub");
@@ -145,24 +162,21 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(Different d) {
-		d.getLeft().accept(this);
-		d.getRight().accept(this);
+		visitBinary(d);
 		appendln("isub");
 		return "ifne";
 	}
 
 	@Override
 	public Object visit(Division d) {
-		d.getLeft().accept(this);
-		d.getRight().accept(this);
+		visitBinary(d);
 		appendln("idiv");
 		return null;
 	}
 
 	@Override
 	public Object visit(Equal e) {
-		e.getLeft().accept(this);
-		e.getRight().accept(this);
+		visitBinary(e);
 		appendln("isub");
 		return "ifeq";
 	}
@@ -170,18 +184,22 @@ public class ByteCodeGenerator implements Visitor {
 	@Override
 	public Object visit(For f) {
 		Integer local = (Integer)f.getIdf().accept(this);
-		appendln("pop");
-		appendln("for"+f.hashCode()+":");
 		f.getInfLimit().accept(this);
 		appendln("istore "+local.intValue());
+		appendln("for"+f.hashCode()+":");
+		appendln("iload "+local.intValue());
 		f.getSupLimit().accept(this);
 		
 		appendln("isub");
-		appendln("ifeq endfor"+f.hashCode());
+		appendln("ifgt endfor"+f.hashCode());
 		
 		for (Instruction i : f.getInstructions()) {
 			i.accept(this);
 		}
+		appendln("ldc 1");
+		appendln("iload "+local.intValue());
+		appendln("iadd");
+		appendln("istore "+local.intValue());
 		appendln("goto for"+f.hashCode());
 		
 		appendln("endfor"+f.hashCode()+":");
@@ -190,12 +208,13 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(Idf i) {
-		//TODO BUGGY !!! WILL CHANGE LOCAL ID FOR EACH CALL (BECAUSE IT'S A NEW IDF EACH TIME)
-		if(i.getLocal() == -1) {
+		if(!locals.containsKey(i.getName())) {
 			i.setLocal(nextLocal);
+			locals.put(i.getName(), nextLocal);
 			nextLocal++;
+		} else if(i.getLocal() == -1) {
+			i.setLocal(locals.get(i.getName()));
 		}
-		appendln("iload "+i.getLocal());
 		return new Integer(i.getLocal());
 	}
 
@@ -209,15 +228,17 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(Inferior i) {
-		i.getLeft().accept(this);
-		i.getRight().accept(this);
+		visitBinary(i);
 		appendln("isub");
 		return "iflt";
 	}
 
 	@Override
 	public Object visit(Not n) {
-		n.getRight().accept(this);
+		Object r = n.getRight().accept(this);
+		if(r != null) {
+			appendln("iload "+(Integer)r);
+		}
 		appendln("ldc 1");
 		appendln("ixor");
 		return null;
@@ -231,16 +252,14 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(Or o) {
-		o.getLeft().accept(this);
-		o.getRight().accept(this);
+		visitBinary(o);
 		appendln("ior");
 		return null;
 	}
 
 	@Override
 	public Object visit(Product p) {
-		p.getLeft().accept(this);
-		p.getRight().accept(this);
+		visitBinary(p);
 		appendln("imul");
 		return null;
 	}
@@ -259,37 +278,47 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(Substraction s) {
-		s.getLeft().accept(this);
-		s.getRight().accept(this);
+		visitBinary(s);
 		appendln("isub");
 		return null;
 	}
 
 	@Override
 	public Object visit(SupEqual s) {
-		s.getLeft().accept(this);
-		s.getRight().accept(this);
+		visitBinary(s);
 		appendln("isub");
 		return "ifge";
 	}
 
 	@Override
 	public Object visit(Superior s) {
-		s.getLeft().accept(this);
-		s.getRight().accept(this);
+		visitBinary(s);
 		appendln("isub");
 		return "ifgt";
 	}
 
 	@Override
 	public Object visit(While w) {
-		// TODO Auto-generated method stub
+		appendln("while "+w.hashCode()+":");
+		String cnd = (String)w.getCondition().accept(this);
+		appendln(cnd+" endwhile"+w.hashCode());
+		for (Instruction i : w.getInstructions()) {
+			i.accept(this);
+		}
+		appendln("goto while"+w.hashCode()); 
+		appendln("endwhile"+w.hashCode()+":");
 		return null;
 	}
 
 	@Override
 	public Object visit(Write w) {
-		// TODO Auto-generated method stub
+		appendln("getstatic java/lang/System/out Ljava/io/PrintStream;");
+		if(w.getContent() != null) {
+			w.getContent().accept(this);
+		} else {
+			appendln("ldc "+w.getConstant());
+		}
+		appendln("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
 		return null;
 	}
 
