@@ -16,4 +16,13 @@ public class Read extends Instruction {
 		return v.visit(this);
 	}
 
+	public Idf getDest() {
+		return dest;
+	}
+	
+	@Override
+	public String toString() {
+		return "Read "+dest.getName();
+	}
+
 }

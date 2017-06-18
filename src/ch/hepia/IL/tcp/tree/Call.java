@@ -10,7 +10,11 @@ public class Call extends Instruction {
 	public Call(int line, Idf idf, EffectiveParameters parameters) {
 		super(line);
 		this.idf = idf;
-		this.parameters = parameters;
+		this.parameters = new EffectiveParameters(parameters);
+	}
+	
+	public Call(int line, Idf idf) {
+		this(line, idf, new EffectiveParameters());
 	}
 
 	@Override
@@ -20,6 +24,14 @@ public class Call extends Instruction {
 	
 	@Override
 	public String toString() {
-		return "Call to"+idf.getName();
+		return "Call to "+idf.getName();
+	}
+
+	public Idf getIdf() {
+		return idf;
+	}
+
+	public EffectiveParameters getParameters() {
+		return parameters;
 	}
 }

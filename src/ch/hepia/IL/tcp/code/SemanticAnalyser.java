@@ -1,9 +1,14 @@
 package ch.hepia.IL.tcp.code;
 
+import ch.hepia.IL.tcp.Entry;
+import ch.hepia.IL.tcp.Function;
+import ch.hepia.IL.tcp.SymbolHEPIAL;
+import ch.hepia.IL.tcp.SymbolTable;
 import ch.hepia.IL.tcp.tree.AbstractTree;
 import ch.hepia.IL.tcp.tree.Addition;
 import ch.hepia.IL.tcp.tree.And;
 import ch.hepia.IL.tcp.tree.Assignment;
+import ch.hepia.IL.tcp.tree.Axiom;
 import ch.hepia.IL.tcp.tree.Binary;
 import ch.hepia.IL.tcp.tree.BitNot;
 import ch.hepia.IL.tcp.tree.Block;
@@ -13,7 +18,9 @@ import ch.hepia.IL.tcp.tree.Condition;
 import ch.hepia.IL.tcp.tree.Different;
 import ch.hepia.IL.tcp.tree.Division;
 import ch.hepia.IL.tcp.tree.Equal;
+import ch.hepia.IL.tcp.tree.Expression;
 import ch.hepia.IL.tcp.tree.For;
+import ch.hepia.IL.tcp.tree.FunctionReturn;
 import ch.hepia.IL.tcp.tree.Idf;
 import ch.hepia.IL.tcp.tree.InfEqual;
 import ch.hepia.IL.tcp.tree.Inferior;
@@ -24,6 +31,7 @@ import ch.hepia.IL.tcp.tree.Or;
 import ch.hepia.IL.tcp.tree.Product;
 import ch.hepia.IL.tcp.tree.QualifiedCall;
 import ch.hepia.IL.tcp.tree.Read;
+import ch.hepia.IL.tcp.tree.Return;
 import ch.hepia.IL.tcp.tree.Substraction;
 import ch.hepia.IL.tcp.tree.SupEqual;
 import ch.hepia.IL.tcp.tree.Superior;
@@ -160,6 +168,14 @@ public class SemanticAnalyser implements Visitor {
 	}
 
 	@Override
+	public Object visit(Axiom a) {
+		for (Block b : a.getFunctions()) {
+			b.accept(this);
+		}
+		return null;
+	}
+
+	@Override
 	public Object visit(BitNot b) {
 		if (b.getRight().getType().isValid(IntType.getInstance())) {
 			Object valR = b.getRight().accept(this);
@@ -187,14 +203,33 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(Call c) {
-		// TODO Auto-generated method stub
+		for (Expression e : c.getParameters().getParams()) {
+			e.accept(this);
+		}
+		SymbolHEPIAL sh = SymbolTable.getInstance().identify(new Entry(c.getIdf().getName()));
+		if (sh == null || !(sh instanceof Function)) {
+			ErrorHandler.addError(c.getIdf().getName() + " is not a function", c.getLine());
+		} else {
+			Function f = (Function) sh;
+			if (f.getParams().size() == c.getParameters().getParams().size()) {
+				for (int i = 0; i < f.getParams().size(); i++) {
+					if (!f.getParams().get(i).isValid(c.getParameters().getParams().get(i).getType())) {
+						ErrorHandler.addError("Parameter number " + i + " type mismatch, expected " + f.getParams().get(i) + "  but got " + c.getParameters().getParams().get(i).getType(), c.getLine());
+					}
+				}
+			} else if (f.getParams().size() < c.getParameters().getParams().size()) {
+				ErrorHandler.addError("Too many parameters when calling function " + c.getIdf(), c.getLine());
+			} else if (f.getParams().size() > c.getParameters().getParams().size()) {
+				ErrorHandler.addError("Too few parameters when calling function " + c.getIdf(), c.getLine());
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(Condition c) {
 		c.getCondition().accept(this);
-		if(!c.getCondition().getType().isValid(BoolType.getInstance())) {
+		if (!c.getCondition().getType().isValid(BoolType.getInstance())) {
 			ErrorHandler.addError("Condition must be boolean type", c.getLine());
 		}
 		for (Instruction i : c.getThen()) {
@@ -252,6 +287,11 @@ public class SemanticAnalyser implements Visitor {
 			in.accept(this);
 		}
 
+		return null;
+	}
+
+	@Override
+	public Object visit(FunctionReturn f) {
 		return null;
 	}
 
@@ -316,16 +356,24 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(QualifiedCall q) {
-		// TODO Auto-generated method stub
+		// USELESS
 		return null;
 	}
 
 	@Override
 	public Object visit(Read r) {
-		// TODO Auto-generated method stub
+		if (SymbolTable.getInstance().identify(new Entry(r.getDest().getName())) == null) {
+			ErrorHandler.addError("Identifier " + r.getDest().getName() + " doesn't exisits", r.getLine());
+		}
 		return null;
 	}
 
+	@Override
+	public Object visit(Return r) {
+		r.getValue().accept(this);
+		return null;
+	}
+	
 	@Override
 	public Object visit(Substraction s) {
 		verifyIntegerBinary(s);
@@ -363,8 +411,9 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(Write w) {
-		// TODO Auto-generated method stub
+		if(w.getContent() != null) {
+			w.getContent().accept(this);
+		}
 		return null;
 	}
-
 }

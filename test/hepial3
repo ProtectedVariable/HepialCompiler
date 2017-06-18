@@ -1,5 +1,4 @@
 programme hepial3
-constante entier FIXE = 50;
 entier nb;
 entier carre(entier i)
 	entier test;
@@ -8,10 +7,7 @@ entier carre(entier i)
 		retourne i;
 finfonc
 debutprg
-	si nb >= FIXE alors		
-		nb = 5;
-	sinon
-		nb = 3;
-	finsi
-	ecrire carre(nb); 
+	nb = 3;
+	ecrire carre(nb)+1;
+	ecrire nb; 
 finprg

@@ -9,6 +9,8 @@ parser code {:
     Stack<AbstractTree> treeStack = new Stack<>();
     List<Type> params = new LinkedList<>();
     Function currentFunction = null;
+    EffectiveParameters ep = new EffectiveParameters();
+    String fname;
 :};
 
 
@@ -22,15 +24,20 @@ precedence left t_plus, t_minus, t_time, t_div, t_doubleq, t_diff;
 precedence left t_lt, t_gt, t_le, t_ge, t_and, t_or, t_doubledot;
 precedence right t_notn, t_not;
 
-AXIOM ::= PROGRAM {:
+AXIOM ::= {: treeStack.push(new Axiom()); :} PROGRAM {:
     System.out.println(SymbolTable.getInstance());
     System.out.println("AbstractTree stack size "+treeStack.size());
     System.out.println(treeStack.peek());
     SemanticAnalyser.getInstance().analyze(treeStack.peek());
-    ByteCodeGenerator.getInstance().Generate(treeStack.peek());
+    if(ErrorHandler.canGenerate()) {
+        ByteCodeGenerator.getInstance().Generate(treeStack.peek());
+    }
 :};
 
-PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg;
+PROGRAM ::= HEADER DECLARATIONS t_beginPrg BODY t_endPrg {:
+    Block b = (Block)treeStack.pop();
+    ((Axiom)treeStack.peek()).add("main", b);
+:};
 
 HEADER ::= t_prg t_ident;
 
@@ -47,6 +54,8 @@ DECLAVAR ::= TYPE:t LIDENT:lid t_semicolon {:
 LIDENT ::= t_ident:t {: identifiers.add(t); :} | t_ident:t t_coma LIDENT {: identifiers.add(t); :};
 
 DECLACONST ::= t_const TYPE:t t_ident:name t_eq EXPR t_semicolon {:
+    treeStack.pop();
+
     if(t instanceof IntType) {
         SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line));
     } else if(t instanceof BoolType) {
@@ -55,6 +64,7 @@ DECLACONST ::= t_const TYPE:t t_ident:name t_eq EXPR t_semicolon {:
 :};
 
 STARTFONC ::= TYPE:rt t_ident:name t_openpar {:
+    fname = (String) name;
     currentFunction = new Function((Type)rt, HepialF.line);
     SymbolTable.getInstance().add(new Entry((String)name), currentFunction);
     SymbolTable.getInstance().enterBlock();
@@ -63,10 +73,14 @@ STARTFONC ::= TYPE:rt t_ident:name t_openpar {:
 DECLAFONCT ::=  STARTFONC PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
     currentFunction.getParams().addAll(params);
     SymbolTable.getInstance().exitBlock();
+    Block b = (Block)treeStack.pop();
+    ((Axiom)treeStack.peek()).add(fname, b);
 :};
 
 DECLAFONCT ::= STARTFONC t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
     SymbolTable.getInstance().exitBlock();
+    Block b = (Block)treeStack.pop();
+    ((Axiom)treeStack.peek()).add(fname, b);
 :};
 
 TYPE ::= TYPEBASE:t {:
@@ -99,7 +113,10 @@ BODY ::= {: treeStack.push(new Block(HepialF.line)); :} INSTRUCTIONS;
 INSTRUCTIONS ::= INSTR INSTRUCTIONS |;
 INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
-READ ::= t_read t_ident t_semicolon;
+READ ::= t_read t_ident:n t_semicolon {:
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(new Read(HepialF.line, new Idf((String)n)));
+:};
 
 WRITE ::= t_write EXPR t_semicolon {:
     Expression content = (Expression) treeStack.pop();
@@ -123,7 +140,11 @@ ASSIGNMENT ::= ACCESS t_eq EXPR t_semicolon {:
     currentBlock.getInstructions().add(new Assignment(HepialF.line, source, dest));
 :};
 
-RETURN ::= t_return EXPR t_semicolon;
+RETURN ::= t_return EXPR t_semicolon {:
+    Expression e = (Expression) treeStack.pop();
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(new Return(HepialF.line, e));
+:};
 
 CONDTITION ::= t_if EXPR t_then BODY t_else BODY t_endif {:
     Block _else = (Block) treeStack.pop();
@@ -241,6 +262,26 @@ OPEBIN ::= t_plus {: RESULT = "+"; :} | t_minus  {: RESULT = "-"; :} | t_time  {
 
 OPEUN ::= t_not {: RESULT = "non"; :} | t_notn {: RESULT = "~"; :};
 
-FUNCCALL ::= t_ident t_openpar t_closepar | t_ident t_openpar PAREFF t_closepar;
+FUNCCALL ::= t_ident:n t_openpar t_closepar {:
+    Call c = new Call(HepialF.line, new Idf((String)n));
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(c);
+:};
 
-PAREFF ::= EXPR | PAREFF t_coma EXPR;
+FUNCCALL ::= t_ident:n t_openpar PAREFF t_closepar {:
+    Call c = new Call(HepialF.line, new Idf((String)n), ep);
+    Block currentBlock = (Block)treeStack.peek();
+    currentBlock.getInstructions().add(c);
+    ep.getParams().clear();
+    Type t = SymbolTable.getInstance().identify(new Entry((String)n)).getType();
+    treeStack.push(new FunctionReturn(t));
+:};
+
+PAREFF ::= EXPR {:
+    Expression expr = (Expression) treeStack.pop();
+    ep.getParams().add(expr);
+:};
+PAREFF ::= PAREFF t_coma EXPR {:
+    Expression expr = (Expression) treeStack.pop();
+    ep.getParams().add(expr);
+:};

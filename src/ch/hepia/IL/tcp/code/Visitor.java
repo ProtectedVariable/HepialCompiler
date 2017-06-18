@@ -7,6 +7,7 @@ public interface Visitor {
 	Object visit(Addition a);
 	Object visit(And a);
 	Object visit(Assignment a);
+	Object visit(Axiom a);
 	
 	Object visit(BitNot b);
 	Object visit(Block b);
@@ -19,10 +20,10 @@ public interface Visitor {
 	Object visit(Different d);
 	Object visit(Division d);
 	
-	//EffectiveParams ?
 	Object visit(Equal e);
 	
 	Object visit(For f);
+	Object visit(FunctionReturn f);
 	
 	Object visit(Idf i);
 	Object visit(InfEqual i);
@@ -38,6 +39,7 @@ public interface Visitor {
 	Object visit(QualifiedCall q);
 	
 	Object visit(Read r);
+	Object visit(Return r);
 	
 	Object visit(Substraction s);
 	Object visit(SupEqual s);

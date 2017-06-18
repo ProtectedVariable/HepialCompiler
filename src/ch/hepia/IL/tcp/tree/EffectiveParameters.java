@@ -1,5 +1,6 @@
 package ch.hepia.IL.tcp.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EffectiveParameters {
@@ -8,6 +9,14 @@ public class EffectiveParameters {
 
 	public EffectiveParameters(List<Expression> params) {
 		this.params = params;
+	}
+	
+	public EffectiveParameters() {
+		this(new ArrayList<>());
+	}
+
+	public EffectiveParameters(EffectiveParameters parameters) {
+		this.params = new ArrayList<>(parameters.params);
 	}
 
 	public List<Expression> getParams() {
