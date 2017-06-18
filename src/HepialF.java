@@ -414,7 +414,7 @@ class HepialF implements java_cup.runtime.Scanner {
   private int zzFinalHighSurrogate = 0;
 
   /* user code: */
-    public static int line = 0;
+    public static int line = 1;
 
 
   /**

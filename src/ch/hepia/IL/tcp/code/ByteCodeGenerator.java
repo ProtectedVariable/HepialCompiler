@@ -57,21 +57,21 @@ public class ByteCodeGenerator implements Visitor {
 		appendln("    .limit locals 10 ");
 		appendln("    .limit stack 10 ");
 		appendln("    ldc 0 ");
-		appendln("    istore 1  ; this will hold our final integer ");
+		appendln("    istore 1");
 		appendln("Label1: ");
 		appendln("    getstatic java/lang/System/in Ljava/io/InputStream; ");
 		appendln("    invokevirtual java/io/InputStream/read()I ");
 		appendln("    istore 2 ");
 		appendln("    iload 2 ");
-		appendln("    ldc 10   ; the newline delimiter ");
+		appendln("    ldc 10");
 		appendln("    isub ");
 		appendln("    ifeq Label2 ");
 		appendln("    iload 2 ");
-		appendln("    ldc 32   ; the space delimiter ");
+		appendln("    ldc 32");
 		appendln("    isub ");
 		appendln("    ifeq Label2 ");
 		appendln("    iload 2 ");
-		appendln("    ldc 48   ; we have our digit in ASCII, have to subtract it from 48 ");
+		appendln("    ldc 48");
 		appendln("    isub ");
 		appendln("    ldc 10 ");
 		appendln("    iload 1 ");
@@ -80,7 +80,6 @@ public class ByteCodeGenerator implements Visitor {
 		appendln("    istore 1 ");
 		appendln("    goto Label1 ");
 		appendln("Label2: ");
-		appendln("    ;when we come here we have our integer computed in Local Variable 1 ");
 		appendln("    iload 1 ");
 		appendln("    ireturn ");
 		appendln(".end method ");
@@ -103,10 +102,10 @@ public class ByteCodeGenerator implements Visitor {
 
 	public void visitBinary(Binary b) {
 		Object l = b.getLeft().accept(this);
-		Object r = b.getRight().accept(this);
 		if (l != null && l instanceof Integer) {
 			appendln("iload " + (Integer) l);
 		}
+		Object r = b.getRight().accept(this);
 		if (r != null && r instanceof Integer) {
 			appendln("iload " + (Integer) r);
 		}
@@ -144,15 +143,19 @@ public class ByteCodeGenerator implements Visitor {
 			if (!a.getFnames().get(i).equals("main")) {
 				Function f = (Function) SymbolTable.getInstance().identify(new Entry(a.getFnames().get(i)));
 				String params = "";
-				for (@SuppressWarnings("unused")
-				Type t : f.getParams()) {
-					params = params + "I"; // we only deal with integer since
-										   // bool = int
+				String pa = "";
+				for (int k = 0; k < f.getParams().size(); k++) {
+					params = params + "I"; // we only deal with integer since bool = int
+					this.visit(new Idf(f.getPnames().get(i)));
 				}
+				
 				appendln(".method public static " + a.getFnames().get(i) + "(" + params + ")I");
 				appendln(".limit stack " + SymbolTable.getInstance().getSize());
 				appendln(".limit locals " + SymbolTable.getInstance().getSize() * 2);
+				appendln(pa);
 				a.getFunctions().get(i).accept(this);
+				appendln("ldc 0");
+				appendln("ireturn");
 				appendln(".end method");
 			} else {
 				appendln(".method public static main([Ljava/lang/String;)V");
@@ -206,8 +209,8 @@ public class ByteCodeGenerator implements Visitor {
 		}
 		for (Expression e : c.getParameters().getParams()) {
 			Object p = e.accept(this);
-			if(p != null) {
-				appendln("iload "+(Integer)p);
+			if (p != null) {
+				appendln("iload " + (Integer) p);
 			}
 		}
 		appendln("invokestatic " + classname + "." + c.getIdf().getName() + "(" + params + ")I");
@@ -282,7 +285,7 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(FunctionReturn f) {
-		return f;
+		return null;
 	}
 
 	@Override
@@ -299,8 +302,7 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(InfEqual i) {
-		i.getLeft().accept(this);
-		i.getRight().accept(this);
+		visitBinary(i);
 		appendln("isub");
 		return "ifle";
 	}
@@ -353,7 +355,7 @@ public class ByteCodeGenerator implements Visitor {
 	public Object visit(Read r) {
 		Object local = r.getDest().accept(this);
 		appendln("invokestatic " + classname + ".read()I");
-		appendln("istore "+(Integer)local);
+		appendln("istore " + (Integer) local);
 		return null;
 	}
 
@@ -404,8 +406,8 @@ public class ByteCodeGenerator implements Visitor {
 	public Object visit(Write w) {
 		if (w.getContent() != null) {
 			Object r = w.getContent().accept(this);
-			if(r instanceof Integer) {
-				appendln("iload "+(Integer)r);
+			if (r instanceof Integer) {
+				appendln("iload " + (Integer) r);
 			}
 			appendln("getstatic java/lang/System/out Ljava/io/PrintStream;");
 			appendln("swap");

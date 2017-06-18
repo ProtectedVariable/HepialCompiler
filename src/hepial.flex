@@ -8,7 +8,7 @@ import java_cup.runtime.*;
 %unicode
 
 %{
-    public static int line = 0;
+    public static int line = 1;
 %}
 
 COMMENT=\/\/.*

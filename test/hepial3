@@ -8,6 +8,10 @@ entier carre(entier i)
 finfonc
 debutprg
 	nb = 3;
-	ecrire carre(nb)+1;
-	ecrire nb; 
+	si nb == 3 alors
+		nb = carre(nb);
+		ecrire nb;
+	sinon
+		ecrire nb; 
+	finsi
 finprg

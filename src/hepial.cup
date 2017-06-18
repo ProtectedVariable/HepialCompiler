@@ -8,9 +8,11 @@ parser code {:
     List<String> identifiers = new LinkedList<>();
     Stack<AbstractTree> treeStack = new Stack<>();
     List<Type> params = new LinkedList<>();
+    List<String> pnames = new LinkedList<>();
     Function currentFunction = null;
     EffectiveParameters ep = new EffectiveParameters();
     String fname;
+    Block currentBlock;
 :};
 
 
@@ -72,6 +74,9 @@ STARTFONC ::= TYPE:rt t_ident:name t_openpar {:
 
 DECLAFONCT ::=  STARTFONC PARAM t_closepar DECLARATIONS t_beginfunc BODY t_endfunc {:
     currentFunction.getParams().addAll(params);
+    currentFunction.getPnames().addAll(pnames);
+    params.clear();
+    pnames.clear();
     SymbolTable.getInstance().exitBlock();
     Block b = (Block)treeStack.pop();
     ((Axiom)treeStack.peek()).add(fname, b);
@@ -106,10 +111,10 @@ ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
 
 DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
 
-PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}
-| PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
+PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); pnames.add((String)name); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}
+| PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); pnames.add((String)name); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
 
-BODY ::= {: treeStack.push(new Block(HepialF.line)); :} INSTRUCTIONS;
+BODY ::= {: currentBlock = new Block(HepialF.line); treeStack.push(currentBlock); :} INSTRUCTIONS;
 INSTRUCTIONS ::= INSTR INSTRUCTIONS |;
 INSTR ::= ASSIGNMENT | WRITE | READ | CONDTITION | RETURN | WHILE | FOR;
 
@@ -264,13 +269,11 @@ OPEUN ::= t_not {: RESULT = "non"; :} | t_notn {: RESULT = "~"; :};
 
 FUNCCALL ::= t_ident:n t_openpar t_closepar {:
     Call c = new Call(HepialF.line, new Idf((String)n));
-    Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(c);
 :};
 
 FUNCCALL ::= t_ident:n t_openpar PAREFF t_closepar {:
     Call c = new Call(HepialF.line, new Idf((String)n), ep);
-    Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(c);
     ep.getParams().clear();
     Type t = SymbolTable.getInstance().identify(new Entry((String)n)).getType();
@@ -281,6 +284,7 @@ PAREFF ::= EXPR {:
     Expression expr = (Expression) treeStack.pop();
     ep.getParams().add(expr);
 :};
+
 PAREFF ::= PAREFF t_coma EXPR {:
     Expression expr = (Expression) treeStack.pop();
     ep.getParams().add(expr);

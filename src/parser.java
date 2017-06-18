@@ -419,9 +419,11 @@ public class parser extends java_cup.runtime.lr_parser {
     List<String> identifiers = new LinkedList<>();
     Stack<AbstractTree> treeStack = new Stack<>();
     List<Type> params = new LinkedList<>();
+    List<String> pnames = new LinkedList<>();
     Function currentFunction = null;
     EffectiveParameters ep = new EffectiveParameters();
     String fname;
+    Block currentBlock;
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -649,6 +651,9 @@ class CUP$parser$actions {
               Object RESULT =null;
 		
     currentFunction.getParams().addAll(params);
+    currentFunction.getPnames().addAll(pnames);
+    params.clear();
+    pnames.clear();
     SymbolTable.getInstance().exitBlock();
     Block b = (Block)treeStack.pop();
     ((Axiom)treeStack.peek()).add(fname, b);
@@ -771,7 +776,7 @@ class CUP$parser$actions {
 		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
+		 params.add((Type)t); pnames.add((String)name); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PARAM",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -786,7 +791,7 @@ class CUP$parser$actions {
 		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 params.add((Type)t); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
+		 params.add((Type)t); pnames.add((String)name); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PARAM",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -795,7 +800,7 @@ class CUP$parser$actions {
           case 26: // NT$1 ::= 
             {
               Object RESULT =null;
- treeStack.push(new Block(HepialF.line)); 
+ currentBlock = new Block(HepialF.line); treeStack.push(currentBlock); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("NT$1",35, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1359,7 +1364,6 @@ class CUP$parser$actions {
 		String n = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
     Call c = new Call(HepialF.line, new Idf((String)n));
-    Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(c);
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCCALL",30, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1375,7 +1379,6 @@ class CUP$parser$actions {
 		String n = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
 		
     Call c = new Call(HepialF.line, new Idf((String)n), ep);
-    Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(c);
     ep.getParams().clear();
     Type t = SymbolTable.getInstance().identify(new Entry((String)n)).getType();

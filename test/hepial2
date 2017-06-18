@@ -5,7 +5,7 @@ entier c,b;
 debutprg
 	lire c;
 	lire b;
-	si (c>=b) alors
+	si (c < b) alors
 		ecrire c;
 	sinon
 		ecrire b;
