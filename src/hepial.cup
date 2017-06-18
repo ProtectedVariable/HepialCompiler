@@ -14,6 +14,7 @@ parser code {:
     EffectiveParameters ep = new EffectiveParameters();
     String fname;
     Block currentBlock;
+    Stack<Expression> indices = new Stack<>();
 :};
 
 
@@ -262,12 +263,29 @@ ACCESS ::= t_ident:n {:
     }
     treeStack.push(id);
 :};
-ACCESS ::= t_ident INDICES;//TODO
 
-INDICES ::= INDEX INDICES | INDEX;
+ACCESS ::= t_ident:n INDICES:i {:
+    List<Expression> ids = (List<Expression>) i;
+    Idf id = new Idf((String)n, ids);
+:};
+
+INDICES ::= INDEX INDICES {:
+    //indices.push(treeStack.pop()); //TODO
+:};
+
+INDICES ::= INDEX {:
+    //indices.push(treeStack.pop()); //TODO
+:};
+
 INDEX ::= t_opensq EXPR t_closesq;
 
-OPERAND ::= ACCESS | FUNCCALL | t_true | t_false;
+OPERAND ::= ACCESS | FUNCCALL;
+OPERAND ::= t_true {:
+        treeStack.push(new BoolValue(true));
+:};
+OPERAND ::= t_false {:
+        treeStack.push(new BoolValue(false));
+:};
 OPERAND ::= t_intConst:i {:
     treeStack.push(new NumberValue(i));
 :};

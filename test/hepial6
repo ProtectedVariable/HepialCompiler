@@ -1,5 +1,6 @@
 programme hepial6
-entier x,y,z;
+entier[0..10] x;
+entier i;
 
 entier f(entier k)
 debutfonc
@@ -7,6 +8,10 @@ debutfonc
 finfonc
 
 debutprg
-	x = 1;
-	y = x;
+	x[0] = 1;
+	x[5] = 50;
+	x[10] = 100;
+	pour i allantde 0 a 10 faire
+		ecrire f(x[i]);
+	finpour
 finprg

@@ -425,6 +425,7 @@ public class parser extends java_cup.runtime.lr_parser {
     EffectiveParameters ep = new EffectiveParameters();
     String fname;
     Block currentBlock;
+    Stack<Expression> indices = new Stack<>();
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -1156,6 +1157,15 @@ class CUP$parser$actions {
           case 50: // ACCESS ::= t_ident INDICES 
             {
               Object RESULT =null;
+		int nleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int nright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		String n = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int ileft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object i = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    List<Expression> ids = (List<Expression>) i;
+    Idf id = new Idf((String)n, ids);
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ACCESS",25, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1165,6 +1175,8 @@ class CUP$parser$actions {
           case 51: // INDICES ::= INDEX INDICES 
             {
               Object RESULT =null;
+		
+    //indices.push(treeStack.pop()); //TODO
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("INDICES",32, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1174,6 +1186,8 @@ class CUP$parser$actions {
           case 52: // INDICES ::= INDEX 
             {
               Object RESULT =null;
+		
+    //indices.push(treeStack.pop()); //TODO
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("INDICES",32, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1210,6 +1224,8 @@ class CUP$parser$actions {
           case 56: // OPERAND ::= t_true 
             {
               Object RESULT =null;
+		
+        treeStack.push(new BoolValue(true));
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPERAND",27, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1219,6 +1235,8 @@ class CUP$parser$actions {
           case 57: // OPERAND ::= t_false 
             {
               Object RESULT =null;
+		
+        treeStack.push(new BoolValue(false));
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPERAND",27, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

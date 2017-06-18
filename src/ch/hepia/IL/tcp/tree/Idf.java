@@ -1,5 +1,7 @@
 package ch.hepia.IL.tcp.tree;
 
+import java.util.List;
+
 import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.Type;
 
@@ -7,12 +9,19 @@ public class Idf extends Expression {
 
 	private String name;
 	private Type type;
+	private List<Expression> access;
 	
 	private int local;
 	
 	public Idf(String name) {
 		this.name = name;
 		this.local = -1;
+	}
+	
+	public Idf(String name, List<Expression> access) {
+		this.name = name;
+		this.local = -1;
+		this.access = access;
 	}
 
 	@Override

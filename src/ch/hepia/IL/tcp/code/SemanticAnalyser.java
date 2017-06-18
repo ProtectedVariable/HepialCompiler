@@ -131,22 +131,22 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(And a) {
-		verifyIntegerBinary(a);
+		verifyBooleanBinary(a);
 		Object valL = a.getLeft().accept(this);
 		if (valL != null) {
-			int l = ((Integer) valL).intValue();
-			if (l == 0)
-				return 0;
+			boolean l = ((Boolean) valL).booleanValue();
+			if (!l)
+				return false;
 		}
 		Object valR = a.getRight().accept(this);
 		if (valR != null) {
-			int r = ((Integer) valR).intValue();
-			if (r == 0)
-				return 0;
+			boolean r = ((Boolean) valR).booleanValue();
+			if (!r)
+				return false;
 		}
 		if (valL == null || valR == null)
 			return null;
-		return new Integer(((Integer) valL).intValue() & ((Integer) valR).intValue());
+		return new Boolean(((Boolean) valL).booleanValue() && ((Boolean) valR).booleanValue());
 	}
 
 	@Override
@@ -328,16 +328,22 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(Or o) {
-		verifyIntegerBinary(o);
+		verifyBooleanBinary(o);
 		Object valL = o.getLeft().accept(this);
-		if (valL == null)
-			return null;
+		if (valL != null) {
+			boolean l = ((Boolean) valL).booleanValue();
+			if (l)
+				return true;
+		}
 		Object valR = o.getRight().accept(this);
-		if (valR == null)
+		if (valR != null) {
+			boolean r = ((Boolean) valR).booleanValue();
+			if (r)
+				return true;
+		}
+		if (valL == null || valR == null)
 			return null;
-		int l = ((Integer) valL).intValue();
-		int r = ((Integer) valR).intValue();
-		return new Integer(l | r);
+		return new Boolean(((Boolean) valL).booleanValue() || ((Boolean) valR).booleanValue());
 	}
 
 	@Override
