@@ -53,6 +53,37 @@ public class ByteCodeGenerator implements Visitor {
 		locals = new HashMap<>();
 		target = new StringBuilder();
 		target.append(".class public " + classname + "\n" + ".super java/lang/Object\n" + ".method public <init>()V\n" + "aload_0 \n" + "invokespecial java/lang/Object/<init>()V \n" + "return\n" + ".end method\n");
+		appendln(".method public static read()I");
+		appendln("    .limit locals 10 ");
+		appendln("    .limit stack 10 ");
+		appendln("    ldc 0 ");
+		appendln("    istore 1  ; this will hold our final integer ");
+		appendln("Label1: ");
+		appendln("    getstatic java/lang/System/in Ljava/io/InputStream; ");
+		appendln("    invokevirtual java/io/InputStream/read()I ");
+		appendln("    istore 2 ");
+		appendln("    iload 2 ");
+		appendln("    ldc 10   ; the newline delimiter ");
+		appendln("    isub ");
+		appendln("    ifeq Label2 ");
+		appendln("    iload 2 ");
+		appendln("    ldc 32   ; the space delimiter ");
+		appendln("    isub ");
+		appendln("    ifeq Label2 ");
+		appendln("    iload 2 ");
+		appendln("    ldc 48   ; we have our digit in ASCII, have to subtract it from 48 ");
+		appendln("    isub ");
+		appendln("    ldc 10 ");
+		appendln("    iload 1 ");
+		appendln("    imul ");
+		appendln("    iadd ");
+		appendln("    istore 1 ");
+		appendln("    goto Label1 ");
+		appendln("Label2: ");
+		appendln("    ;when we come here we have our integer computed in Local Variable 1 ");
+		appendln("    iload 1 ");
+		appendln("    ireturn ");
+		appendln(".end method ");
 	}
 
 	public void Generate(AbstractTree t) {
@@ -320,7 +351,9 @@ public class ByteCodeGenerator implements Visitor {
 
 	@Override
 	public Object visit(Read r) {
-		// TODO Auto-generated method stub
+		Object local = r.getDest().accept(this);
+		appendln("invokestatic " + classname + ".read()I");
+		appendln("istore "+(Integer)local);
 		return null;
 	}
 
