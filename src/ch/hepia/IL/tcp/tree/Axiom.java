@@ -5,6 +5,12 @@ import java.util.List;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class Axiom
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a program, with all it's functions
+ */
 public class Axiom implements AbstractTree {
 
 	private List<String> fnames;

@@ -7,6 +7,12 @@ import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.ArrayType;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class ArrayAccess
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents an access to an array of n-dimension
+ */
 public class ArrayAccess extends Expression {
 
 	private Idf array;

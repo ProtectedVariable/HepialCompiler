@@ -4,6 +4,12 @@ import java.util.List;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class While
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a while loop
+ */
 public class While extends Instruction {
 
 	private Expression condition;

@@ -4,6 +4,12 @@ import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.BoolType;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class Equals
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents an equality test (==)
+ */
 public class Equal extends Relation {
 
 	public Equal(Expression left, Expression right) {

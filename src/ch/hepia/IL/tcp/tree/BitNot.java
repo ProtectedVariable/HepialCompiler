@@ -4,6 +4,12 @@ import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.IntType;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class BitNot
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represent a bitwise not operation
+ */
 public class BitNot extends Unary {
 
 	public BitNot(Expression right) {

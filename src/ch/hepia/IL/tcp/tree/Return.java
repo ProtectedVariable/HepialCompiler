@@ -1,8 +1,13 @@
 package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
-import ch.hepia.IL.tcp.types.Type;
 
+/**Class Return
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a return from a function instruction
+ */
 public class Return extends Instruction {
 
 	private Expression value;

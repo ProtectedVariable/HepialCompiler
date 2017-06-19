@@ -3,6 +3,12 @@ package ch.hepia.IL.tcp.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+/**Class EffectiveParameters
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents the actual values handed off to a function when called
+ */
 public class EffectiveParameters {
 
 	private List<Expression> params;

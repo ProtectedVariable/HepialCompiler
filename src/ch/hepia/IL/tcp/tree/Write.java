@@ -2,6 +2,12 @@ package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class Write
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a write into console instruction
+ */
 public class Write extends Instruction {
 	
 	private Expression content;

@@ -2,6 +2,12 @@ package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class Read
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a reading into a variable instruction
+ */
 public class Read extends Instruction {
 
 	private Idf dest;

@@ -2,6 +2,12 @@ package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class Call
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Call to a function
+ */
 public class Call extends Instruction {
 
 	private Idf idf;

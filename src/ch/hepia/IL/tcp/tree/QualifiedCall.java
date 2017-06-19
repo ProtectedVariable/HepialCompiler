@@ -1,5 +1,11 @@
 package ch.hepia.IL.tcp.tree;
 
+/**Class QualifiedCall
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Unused class
+ */
 public class QualifiedCall extends Call {
 
 	private Expression reciever;

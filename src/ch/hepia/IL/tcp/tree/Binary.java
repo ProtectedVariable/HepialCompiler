@@ -1,5 +1,11 @@
 package ch.hepia.IL.tcp.tree;
 
+/**Class Binary
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Parent to all binary (2 operand) operation
+ */
 public abstract class Binary extends Expression {
 	protected Expression left, right;
 

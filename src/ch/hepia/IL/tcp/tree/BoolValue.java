@@ -4,6 +4,12 @@ import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.BoolType;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class BoolValue
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a boolean constant value (true or false)
+ */
 public class BoolValue extends Expression {
 
 	private boolean value;

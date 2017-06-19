@@ -4,6 +4,12 @@ import java.util.List;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class Condition
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a conditional block (if then else)
+ */
 public class Condition extends Instruction {
 	private Expression condition;
 	private List<Instruction> then,_else;

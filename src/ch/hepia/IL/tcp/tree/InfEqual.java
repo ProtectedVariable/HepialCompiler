@@ -4,6 +4,12 @@ import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.BoolType;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class InfEqual
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents an inferior or equal (<=) relation
+ */
 public class InfEqual extends Relation {
 
 	public InfEqual(Expression left, Expression right) {

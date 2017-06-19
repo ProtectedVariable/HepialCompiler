@@ -4,6 +4,12 @@ import java.util.List;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class For
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a for loop, with beginning value and max value
+ */
 public class For extends Instruction {
 
 	private Idf idf;

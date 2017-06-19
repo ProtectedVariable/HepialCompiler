@@ -21,7 +21,7 @@ debutprg
 		y = f(x, y);
 	sinon
 		pour b allantde 0 a 10 faire
-			r = 3;
+			k = 3;
 		finpour
 	finsi
 finprg

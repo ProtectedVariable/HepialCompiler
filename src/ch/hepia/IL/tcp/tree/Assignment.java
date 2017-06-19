@@ -2,6 +2,12 @@ package ch.hepia.IL.tcp.tree;
 
 import ch.hepia.IL.tcp.code.Visitor;
 
+/**Class Assignment
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents an assignment to a variable
+ */
 public class Assignment extends Instruction {
 
 	private Expression source, dest;

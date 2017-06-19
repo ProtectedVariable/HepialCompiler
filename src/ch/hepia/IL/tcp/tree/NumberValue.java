@@ -4,6 +4,12 @@ import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.IntType;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class NumberValue
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents an integer constant value
+ */
 public class NumberValue extends Expression {
 	private int value;
 

@@ -4,6 +4,12 @@ import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.BoolType;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class Not
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents a boolean not operation (!)
+ */
 public class Not extends Unary {
 
 	public Not(Expression right) {

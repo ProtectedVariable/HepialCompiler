@@ -3,6 +3,12 @@ package ch.hepia.IL.tcp.tree;
 import ch.hepia.IL.tcp.code.Visitor;
 import ch.hepia.IL.tcp.types.Type;
 
+/**Class Idf
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ * 
+ * Represents an identifier to a symbol (variable, function,...)
+ */
 public class Idf extends Expression {
 
 	private String name;
