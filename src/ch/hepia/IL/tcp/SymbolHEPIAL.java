@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp;
 
+/**Class SymbolHEPIAL
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Parent class representing a symbol in hepial
+ */
+
 import ch.hepia.IL.tcp.types.Type;
 
 public abstract class SymbolHEPIAL {

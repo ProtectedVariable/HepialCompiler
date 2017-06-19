@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp;
 
+/**Class Function
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class representing a function in hepial
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 

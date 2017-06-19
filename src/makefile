@@ -1,5 +1,5 @@
 all: run
-FILE=../test/test.hepial
+FILE=../test/hepial1
 
 Test.class: HepialF.java hepial.cup Test.java
 	java -jar java-cup-11b.jar hepial.cup
@@ -23,4 +23,5 @@ run: Test.class
 	javac -classpath .:java-cup-11b.jar $^
 
 clean:
-	rm *.class sym.java parser.java HepialF.java
+	find . -name '*.class' -delete
+	rm sym.java parser.java HepialF.java

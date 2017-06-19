@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp.types;
 
+/**Class IntType
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class representing an int in hepial
+ */
+
 public class IntType extends Type {
 
 	private static IntType instance;

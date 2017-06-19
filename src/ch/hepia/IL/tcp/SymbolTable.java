@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp;
 
+/**Class SymbolTable
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class representing the symbol table
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,0 +1,270 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\setlength{\parindent}{0pt}
+\addtolength{\hoffset}{-3cm}
+\addtolength{\textwidth}{6cm}
+\usepackage{listings}
+\usepackage{rotating}
+
+\lstdefinestyle{mystyle}{
+    breakatwhitespace=false,         
+    breaklines=true,                                     
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    extendedchars=true,
+    literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1
+}
+ 
+\lstset{style=mystyle}
+
+\title{Réalisation d'un compilateur pour HEPIAL}
+\author{Maxime Lovino \and Thomas Ibanez}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction}
+
+Nous avons réalisé un compilateur pour un langage de programmation fictive appelé \verb+HEPIAL+ qui va produire du bytecode pour pouvoir exécuter notre programme dans la JVM. \\
+
+Ci-dessous un exemple de programme en \verb+HEPIAL+ : \\
+
+\begin{lstlisting}
+programme hepial5
+
+entier n;
+entier result;
+
+entier facto(entier k)
+entier x;
+debutfonc
+	x=0;
+	si k == 0 alors
+		retourne(1);
+	sinon
+		retourne(k*facto(k-1));
+	finsi
+finfonc
+
+debutprg
+	lire n;
+
+	si n < 20 alors
+		result = facto(n);
+		ecrire "factorielle de ";
+		ecrire n;
+		ecrire " est égale à : ";
+		ecrire result;
+	sinon
+		ecrire " votre nombre est trop grand ! ";
+	finsi
+finprg
+\end{lstlisting}
+\section{Flex}
+Dans la partie flex de notre compilateur, nous détectons tous les mots-clés du langage et retournons des symboles à la partie CUP. Dans le cas de la détection d'une string ou d'une constante entière, nous passons également la valeur à CUP.
+\section{CUP}
+Dans la partie CUP, nous définissons la grammaire de notre langage à partir du document de spécification fourni. Ici, nous remplissons la table des symboles et l'arbre abstrait.
+\section{Table des symboles}
+La table des symboles est une map qui prend comme clé une \verb+Entry+ et comme valeur une liste de \verb+SymbolHEPIAL+ \\
+
+Elle prend en compte les différents blocs et lorsqu'on appelle la fonction \verb+identify+ à partir d'un bloc, elle nous renvoie le symbole le plus spécifique au bloc actuel. \\
+
+Elle gère également les doubles déclarations et renvoie une exception en cas de double déclaration d'un même identifiant dans le même scope. \\
+
+Les différents types du langage sont définis comme des sous-classes de \verb+Type+. Le diagramme UML du package des types se trouve en annexe.
+\section{Arbre abstrait}
+L'arbre abstrait permet de representer notre programme comme un ensemble d'objets qu'on va grouper pour permettre la vérification et la génération du code.\\
+Il faut donc créer une classe par instruction ou expression possible du langage qu'on compile. Après l'analyse du programme, il ne reste qu'un objet dans la pile d'arbre, qui est axiome, à savoir le programme complet et les différentes fonctions.\\
+Le diagramme UML de l'arbre abstrait est en annexe.
+
+\section{Analyseur sémantique}
+L'analyseur sémantique, basé sur le pattern visiteur va visiter chaque instruction de chaque bloc, et chacun de composants de ces instructions afin de vérifier la validité de celles-ci. Par exemple, on va vérifier le scope des variables et la validité des paramètres lors de l'appel de fonctions. Il va également réduire les expressions constantes. Par exemple si on prend le programme
+\begin{verbatim}
+x = 10 + 2    
+\end{verbatim}
+L'analyseur va le transformer en
+\begin{verbatim}
+x = 12
+\end{verbatim}
+Cette transformation est également vraie pour les booléens, si une expression "ou" contient un membre vrai, alors elle sera réduite à vrai, au contraire si une expression "et" contient un membre faux, alors elle sera réduite à faux. \\
+L'analyseur va également vérifier que lors d'une opération n'impliquant que des booléens ("et" et "ou" par exemple) les deux opérandes sont de type booléen, au contraire lors d'une opération arithmétique, les deux opérandes doivent être des entiers. Si l'opérateur fonctionne avec les deux types ("==" par exemple) alors l'analyseur va vérifier que les deux types sont compatiables.\\
+Voici quelques exemples d'erreurs possibles:
+Si on prends un programme avec beaucoups d'erreurs:
+\begin{lstlisting}
+programme errorhepial
+
+booleen b,c;
+entier x;
+entier y;
+
+entier f(entier k)
+debutfonc
+	retourne(k + 2);
+finfonc
+
+debutprg
+	x = vrai;
+	y = x + b;
+	b = 0;
+	
+	si x < b alors
+		x = ~x;
+		y = b(x);	
+		y = f(c);
+		y = f(x, y);
+	sinon
+		pour b allantde 0 a 10 faire
+			r = 3;
+		finpour
+	finsi
+finprg
+\end{lstlisting}
+On obtiens:
+\begin{verbatim}
+[ERROR]Symbol r not found file:24
+[ERROR]Type mismatch: trying to put BOOLEAN in INTEGER file:14
+[ERROR]Bad operand : expected integer (b)
+[ERROR]Type mismatch: trying to put INTEGER in BOOLEAN file:17
+[ERROR]Bad operand : expected integer (b)
+[ERROR]b is not a function file:19
+[ERROR]Type mismatch: trying to put BOOLEAN in INTEGER file:20
+[ERROR]Parameter number 0 type mismatch, expected INTEGER but got BOOLEAN file:20
+[ERROR]Too many parameters when calling function f file:21
+[ERROR]For variable must be an integer file:26
+[ERROR]Type mismatch: trying to put INTEGER in null file:25
+\end{verbatim}
+
+\section{Générateur de Jasmin}
+Jasmin fonctionne avec une pile d'opérandes servant a faire les différentes opérations et de registres locaux au contexte d'une fonction.\\
+Lorsqu'une variable est utilisée on lui assigne un numéro de registre local afin de savoir où elle est stockée. \\
+Le générateur va parcourir l'arbre et transformer les instructions et expressions dans leurs équivalent jasmin. \\
+\subsection{Opérandes relationnelles et labels}
+Dans le cadre des opérateurs relationnels, leurs fonction visiter va mettre les opérandes sur la pile, ajouter une soustraction puis retourner le test a faire pour sauter (branch) si la comparaison est vraie. \\
+Par exemple dans le cas de l'opérateur "==":
+\begin{lstlisting} [language=Java]
+	@Override
+	public Object visit(Equal e) {
+		visitBinary(e);
+		appendln("isub");
+		return "ifeq";
+	}
+\end{lstlisting}
+La fonction retourne "ifeq" car si la soustraction retourne 0, alors le test est vrai, ainsi l'appelant (un "si" par exemple) pourra définir la label oû sauter.\\
+Par exemple dans le cas de l'opérateur "==":
+\begin{lstlisting} [language=Java]
+	@Override
+	public Object visit(Condition c) {
+		Object cnd = c.getCondition().accept(this);
+
+		appendln(((String) cnd) + " if" + c.hashCode() + "_then");
+		appendln("goto if" + c.hashCode() + "_else");
+
+		appendln("if" + c.hashCode() + "_then:");
+		for (Instruction i : c.getThen()) {
+			i.accept(this);
+		}
+		appendln("goto endif" + c.hashCode());
+		appendln("if" + c.hashCode() + "_else:");
+		for (Instruction i : c.get_else()) {
+			i.accept(this);
+		}
+		appendln("endif" + c.hashCode() + ":");
+		return null;
+	}
+\end{lstlisting}
+Les if, for et while se servent du \verb+hashCode()+ de l'objet pour générer leur labels de saut.
+Exemple le programme:
+
+\begin{lstlisting}
+programme hepial1
+
+entier x;
+
+debutprg
+	x = 10 + 2;
+	si x == 12 alors
+		ecrire "YOUHOU";
+	sinon
+		x = 21;
+	finsi
+	ecrire x;
+finprg
+
+\end{lstlisting}
+Donne le jasmin suivant:
+\begin{verbatim}
+.method public static main([Ljava/lang/String;)V
+.limit stack 6
+.limit locals 8
+ldc 12
+istore 0
+iload 0
+ldc 12
+isub
+ifeq if1956725890_then
+goto if1956725890_else
+if1956725890_then:
+ldc "YOUHOU"
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+goto endif1956725890
+if1956725890_else:
+ldc 21
+istore 0
+endif1956725890:
+iload 0
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokevirtual java/io/PrintStream/print(I)V
+return
+.end method
+\end{verbatim}
+On peut voir comment le if génère son code et ses labels et que l'analyseur a bien fait son travail car x est directement assigné à la valeur 12 (10 + 2).\\
+
+\subsection{Fonctions}
+Le programme étant séquentiel, les fonctions sont déclarées static et appelées par l'instruction \verb+invokestatic+.\\
+Elles sont déclarés avant le fonction main dans le fichier jasmin. \\
+Exemple, la fonction factorielle recusive définie plus haut:
+\begin{verbatim}
+.method public static facto(I)I
+.limit stack 5
+.limit locals 10
+ldc 0
+istore 1
+iload 0
+ldc 0
+isub
+ifeq if1956725890_then
+goto if1956725890_else
+if1956725890_then:
+ldc 1
+ireturn
+goto endif1956725890
+if1956725890_else:
+iload 0
+ldc 1
+isub
+invokestatic hepial.facto(I)I
+iload 0
+imul
+ireturn
+endif1956725890:
+ldc 0
+ireturn
+.end method
+\end{verbatim}
+
+\section{Conclusion}
+En conclusion, ce projet était assez intéressant à réaliser, malgré le fait que la documentation sur les outils utilisés ainsi que les différentes techniques était assez difficile à trouver. Cependant cela nous a permis de mieux comprendre les fondements de la compilation et de la génération de code.\\
+Nous sommes très contents du résultat car nous pouvons compiler tous les programmes fournis, ainsi que d'autres programmes écrits par nos soins.
+\end{document}

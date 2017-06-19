@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp.types;
 
+/**Class Const
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class representing a constant
+ */
+
 import ch.hepia.IL.tcp.SymbolHEPIAL;
 import ch.hepia.IL.tcp.tree.Expression;
 

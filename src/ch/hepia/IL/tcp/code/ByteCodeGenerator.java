@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp.code;
 
+/**Class ByteCodeGenerator
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class containing to convert hepial code to bytecode
+ */
+
 import java.util.HashMap;
 
 import ch.hepia.IL.tcp.Entry;

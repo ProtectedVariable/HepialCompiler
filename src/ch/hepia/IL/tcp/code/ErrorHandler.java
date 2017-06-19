@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp.code;
 
+/**Class ErrorHandler
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Handle hepial code errors when compiling
+ */
+
 public class ErrorHandler {
 
 	private static String message = "";

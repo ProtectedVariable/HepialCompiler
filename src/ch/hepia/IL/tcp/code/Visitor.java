@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp.code;
 
+/**Interface Visitor
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Visitor interface implemented for the usage of the visitor design pattern
+ */
+
 import ch.hepia.IL.tcp.tree.*;
 
 public interface Visitor {

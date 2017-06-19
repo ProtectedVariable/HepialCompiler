@@ -1,5 +1,13 @@
 package ch.hepia.IL.tcp.code;
 
+/**Class SemanticAnalyser
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class handling the semantic analysis of the hepial code
+ */
+
+
 import ch.hepia.IL.tcp.Entry;
 import ch.hepia.IL.tcp.Function;
 import ch.hepia.IL.tcp.SymbolHEPIAL;

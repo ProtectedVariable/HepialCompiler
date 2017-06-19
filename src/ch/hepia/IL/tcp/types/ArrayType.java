@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp.types;
 
+/**Class ArrayType
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class representing an Array in hepial
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 

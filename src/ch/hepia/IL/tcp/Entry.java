@@ -1,5 +1,11 @@
 package ch.hepia.IL.tcp;
 
+/**Class Entry
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class representing an entry in the symbol table
+ */
 
 public class Entry {
 

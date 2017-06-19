@@ -1,5 +1,12 @@
 package ch.hepia.IL.tcp.types;
 
+/**Class BoolType
+ * @author Ibanez Thomas & Lovino Maxime
+ * @version 1.0
+ *
+ * Class representing a boolean in hepial
+ */
+
 public class BoolType extends Type {
 
 	private static BoolType instance;
