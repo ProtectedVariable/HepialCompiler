@@ -45,6 +45,10 @@ public class Condition extends Instruction {
 
 	public List<Instruction> get_else() {
 		return _else;
+	}
+
+	public void setCondition(Expression condition) {
+		this.condition = condition;
 	} 
 	
 }

@@ -1,9 +1,14 @@
 programme hepial1
 
 entier x;
-//constante booleen y = vrai;
+constante booleen y = vrai;
 
 debutprg
 	x = 10 + 2;
 	x = x + 1;
+	si y == vrai alors
+		x = x + 2;
+	sinon
+		x = x - 2;
+	finsi
 finprg

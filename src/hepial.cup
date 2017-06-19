@@ -69,12 +69,12 @@ DECLAVAR ::= TYPE:t LIDENT:lid t_semicolon {:
 LIDENT ::= t_ident:t {: identifiers.add(t); :} | t_ident:t t_coma LIDENT {: identifiers.add(t); :};
 
 DECLACONST ::= t_const TYPE:t t_ident:name t_eq EXPR t_semicolon {:
-    treeStack.pop();
+    Expression value = (Expression)treeStack.pop();
 
     if(t instanceof IntType) {
-        SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line));
+        SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line, value));
     } else if(t instanceof BoolType) {
-        SymbolTable.getInstance().add(new Entry((String)name), new BoolConst(SymbolTable.getInstance().getBloc(), HepialF.line));
+        SymbolTable.getInstance().add(new Entry((String)name), new BoolConst(SymbolTable.getInstance().getBloc(), HepialF.line, value));
     }
 :};
 
@@ -119,12 +119,12 @@ ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
 
 DIM ::= t_intConst:i t_doubledot t_intConst:s {:
     LimInf.add(i);
-    LimSup.add(s);
+    LimSup.add(s+1);
 :};
 
 DIM ::= DIM t_coma t_intConst:i t_doubledot t_intConst:s {:
     LimInf.add(i);
-    LimSup.add(s);
+    LimSup.add(s+1);
 :};
 
 PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); pnames.add((String)name); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}

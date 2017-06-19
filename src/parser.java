@@ -609,12 +609,12 @@ class CUP$parser$actions {
 		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
 		
-    treeStack.pop();
+    Expression value = (Expression)treeStack.pop();
 
     if(t instanceof IntType) {
-        SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line));
+        SymbolTable.getInstance().add(new Entry((String)name), new IntConst(SymbolTable.getInstance().getBloc(), HepialF.line, value));
     } else if(t instanceof BoolType) {
-        SymbolTable.getInstance().add(new Entry((String)name), new BoolConst(SymbolTable.getInstance().getBloc(), HepialF.line));
+        SymbolTable.getInstance().add(new Entry((String)name), new BoolConst(SymbolTable.getInstance().getBloc(), HepialF.line, value));
     }
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DECLACONST",7, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -751,7 +751,7 @@ class CUP$parser$actions {
 		int s = (int)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     LimInf.add(i);
-    LimSup.add(s);
+    LimSup.add(s+1);
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DIM",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -769,7 +769,7 @@ class CUP$parser$actions {
 		int s = (int)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     LimInf.add(i);
-    LimSup.add(s);
+    LimSup.add(s+1);
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DIM",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

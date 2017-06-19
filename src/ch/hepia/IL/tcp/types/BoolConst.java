@@ -1,19 +1,14 @@
 package ch.hepia.IL.tcp.types;
 
-public class BoolConst extends Const {
+import ch.hepia.IL.tcp.tree.Expression;
 
-//	private final boolean VALUE;
+public class BoolConst extends Const {
 	
-	public BoolConst(int bloc, int line) {
-		super(BoolType.getInstance(), bloc, line);
-//		this.VALUE = value;
+	public BoolConst(int bloc, int line, Expression value) {
+		super(BoolType.getInstance(), bloc, line, value);
 	}
-/*
-	public boolean getVALUE() {
-		return VALUE;
-	}
-*/
+	
 	public String toString() {
-		return "BOOLEAN";
+		return "("+getValue().toString()+")";
 	}
 }

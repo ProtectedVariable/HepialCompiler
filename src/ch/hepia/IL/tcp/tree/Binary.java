@@ -16,5 +16,13 @@ public abstract class Binary extends Expression {
 		return right;
 	}
 
+	public void setLeft(Expression left) {
+		this.left = left;
+	}
+
+	public void setRight(Expression right) {
+		this.right = right;
+	}
+
 	
 }

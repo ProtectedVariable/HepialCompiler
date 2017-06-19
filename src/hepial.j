@@ -15,62 +15,32 @@ invokespecial java/util/Scanner/<init>(Ljava/io/InputStream;)V
 invokevirtual java/util/Scanner/nextInt()I
 ireturn
 .end method
-.method public static f(I)I
-.limit stack 4
+.method public static main([Ljava/lang/String;)V
+.limit stack 6
 .limit locals 8
+ldc 12
+istore 0
+iload 0
+ldc 1
+iadd
+istore 0
+ldc 1
+ldc 1
+isub
+ifeq if1956725890_then
+goto if1956725890_else
+if1956725890_then:
 iload 0
 ldc 2
 iadd
-ireturn
-ldc 0
-ireturn
-.end method
-.method public static main([Ljava/lang/String;)V
-.limit stack 8
-.limit locals 16
-bipush 10
-multianewarray [I 1
-astore 0
-aload 0
-ldc 0
-ldc 1
-iastore
-aload 0
-ldc 5
-ldc 50
-iastore
-aload 0
-ldc 9
-ldc 100
-iastore
-aload 0
-ldc 1
-aload 0
-ldc 1
-iaload
-ldc 3
-iadd
-iastore
-ldc 0
-istore 1
-for1956725890:
-iload 1
-ldc 9
+istore 0
+goto endif1956725890
+if1956725890_else:
+iload 0
+ldc 2
 isub
-ifgt endfor1956725890
-aload 0
-iload 1
-iaload
-invokestatic hepial.f(I)I
-getstatic java/lang/System/out Ljava/io/PrintStream;
-swap
-invokevirtual java/io/PrintStream/print(I)V
-ldc 1
-iload 1
-iadd
-istore 1
-goto for1956725890
-endfor1956725890:
+istore 0
+endif1956725890:
 return
 .end method
 

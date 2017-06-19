@@ -1,18 +1,16 @@
 package ch.hepia.IL.tcp.types;
+
+import ch.hepia.IL.tcp.tree.Expression;
+
 public class IntConst extends Const {
 
-	//private final int VALUE;
 	
-	public IntConst(int bloc, int line) {
-		super(IntType.getInstance(), bloc, line);
+	public IntConst(int bloc, int line, Expression value) {
+		super(IntType.getInstance(), bloc, line, value);
 	}
-/*
-	public int getVALUE() {
-		return VALUE;
-	}
-*/
+
 	public String toString() {
-		return "INTEGER";
+		return "("+getValue().toString()+")";
 	}
 	
 }

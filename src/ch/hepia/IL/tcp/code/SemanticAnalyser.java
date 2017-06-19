@@ -39,6 +39,7 @@ import ch.hepia.IL.tcp.tree.Superior;
 import ch.hepia.IL.tcp.tree.While;
 import ch.hepia.IL.tcp.tree.Write;
 import ch.hepia.IL.tcp.types.BoolType;
+import ch.hepia.IL.tcp.types.Const;
 import ch.hepia.IL.tcp.types.IntType;
 
 public class SemanticAnalyser implements Visitor {
@@ -102,11 +103,11 @@ public class SemanticAnalyser implements Visitor {
 
 	public void verifyAnyBinary(Binary b) {
 		b.getLeft().accept(this);
-		b.getRight().accept(this);
 		if (b.getLeft().getType() == null) {
 			ErrorHandler.addError("Unknown type of operand " + b.getLeft(), 0);
 			return;
 		}
+		b.getRight().accept(this);
 		if (b.getRight().getType() == null) {
 			ErrorHandler.addError("Unknown type of operand " + b.getRight(), 0);
 			return;
@@ -155,7 +156,7 @@ public class SemanticAnalyser implements Visitor {
 		a.getArray().accept(this);
 		return null;
 	}
-	
+
 	@Override
 	public Object visit(Assignment a) {
 		Object s = a.getSource().accept(this);
@@ -251,6 +252,17 @@ public class SemanticAnalyser implements Visitor {
 	@Override
 	public Object visit(Different d) {
 		verifyAnyBinary(d);
+		Object valL = d.getLeft().accept(this);
+		Object valR = d.getRight().accept(this);
+		if (valL != null && valR != null) {
+			if (valL instanceof Boolean) {
+				d.setLeft(new BoolValue((Boolean) valL));
+				d.setRight(new BoolValue((Boolean) valR));
+			} else if (valL instanceof Integer) {
+				d.setLeft(new NumberValue((Integer) valL));
+				d.setRight(new NumberValue((Integer) valR));
+			}
+		}
 		return null;
 	}
 
@@ -271,6 +283,17 @@ public class SemanticAnalyser implements Visitor {
 	@Override
 	public Object visit(Equal e) {
 		verifyAnyBinary(e);
+		Object valL = e.getLeft().accept(this);
+		Object valR = e.getRight().accept(this);
+		if (valL != null && valR != null) {
+			if (valL instanceof Boolean) {
+				e.setLeft(new BoolValue((Boolean) valL));
+				e.setRight(new BoolValue((Boolean) valR));
+			} else if (valL instanceof Integer) {
+				e.setLeft(new NumberValue((Integer) valL));
+				e.setRight(new NumberValue((Integer) valR));
+			}
+		}
 		return null;
 	}
 
@@ -304,18 +327,34 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(Idf i) {
+		SymbolHEPIAL sh = SymbolTable.getInstance().identify(new Entry(i.getName()));
+		if (sh instanceof Const) {
+			return ((Const) sh).getValue().accept(this);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(InfEqual i) {
-		verifyAnyBinary(i);
+		verifyIntegerBinary(i);
+		Object valL = i.getLeft().accept(this);
+		Object valR = i.getRight().accept(this);
+		if (valL != null && valR != null) {
+			i.setLeft(new NumberValue((Integer) valL));
+			i.setRight(new NumberValue((Integer) valR));
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(Inferior i) {
-		verifyAnyBinary(i);
+		verifyIntegerBinary(i);
+		Object valL = i.getLeft().accept(this);
+		Object valR = i.getRight().accept(this);
+		if (valL != null && valR != null) {
+			i.setLeft(new NumberValue((Integer) valL));
+			i.setRight(new NumberValue((Integer) valR));
+		}
 		return null;
 	}
 
@@ -386,7 +425,7 @@ public class SemanticAnalyser implements Visitor {
 		r.getValue().accept(this);
 		return null;
 	}
-	
+
 	@Override
 	public Object visit(Substraction s) {
 		verifyIntegerBinary(s);
@@ -403,13 +442,24 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(SupEqual s) {
-		verifyAnyBinary(s);
+		Object valL = s.getLeft().accept(this);
+		Object valR = s.getRight().accept(this);
+		if (valL != null && valR != null) {
+			s.setLeft(new NumberValue((Integer) valL));
+			s.setRight(new NumberValue((Integer) valR));
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(Superior s) {
-		verifyAnyBinary(s);
+		verifyIntegerBinary(s);
+		Object valL = s.getLeft().accept(this);
+		Object valR = s.getRight().accept(this);
+		if (valL != null && valR != null) {
+			s.setLeft(new NumberValue((Integer) valL));
+			s.setRight(new NumberValue((Integer) valR));
+		}
 		return null;
 	}
 
@@ -424,7 +474,7 @@ public class SemanticAnalyser implements Visitor {
 
 	@Override
 	public Object visit(Write w) {
-		if(w.getContent() != null) {
+		if (w.getContent() != null) {
 			w.getContent().accept(this);
 		}
 		return null;

@@ -1,5 +1,5 @@
 programme hepial6
-entier[0..10] x;
+entier[0..10, 0..10] x;
 entier i;
 
 entier f(entier k)
@@ -8,11 +8,6 @@ debutfonc
 finfonc
 
 debutprg
-	x[0] = 1;
-	x[5] = 50;
-	x[9] = 100;
-	x[1] = x[1] + 3;
-	pour i allantde 0 a 9 faire
-		ecrire f(x[i]);
-	finpour
+	x[0][0] = 1;
+	ecrire x[0][0];
 finprg

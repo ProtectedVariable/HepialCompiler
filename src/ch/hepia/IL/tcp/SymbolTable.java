@@ -80,7 +80,7 @@ public class SymbolTable {
 				else if (sh instanceof Function)
 					sb.append("Function "+key+" returns "+sh.type+" params ("+((Function)sh).getParams().toString()+")").append("\n");
 				else if(sh instanceof Const)
-					sb.append("Constant "+key+" of type "+sh.type).append("\n");
+					sb.append("Constant "+key+" of type "+sh.type+" "+sh.toString()).append("\n");
 			}
 		}
 		return sb.toString();
