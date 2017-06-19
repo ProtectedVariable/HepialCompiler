@@ -7,17 +7,17 @@ public class ErrorHandler {
 
 	public static void addError(String m, int line) {
 		ok = false;
-		message = message + "[ERROR]" + m + " file:" + line + "\n";
+		message = message + "[ERROR]" + m + (line != 0 ? " file:" + line + "\n" : "\n");
 	}
 
 	public static void addWarning(String m, int line) {
-		message = message + "[WARNING]" + m + " file:" + line + "\n";
+		message = message + "[WARNING]" + m + (line != 0 ? " file:" + line + "\n" : "\n");
 	}
 
 	public static String getMessage() {
 		return message;
 	}
-	
+
 	public static boolean canGenerate() {
 		return ok;
 	}

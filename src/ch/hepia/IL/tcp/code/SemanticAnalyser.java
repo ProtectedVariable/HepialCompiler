@@ -222,7 +222,7 @@ public class SemanticAnalyser implements Visitor {
 			if (f.getParams().size() == c.getParameters().getParams().size()) {
 				for (int i = 0; i < f.getParams().size(); i++) {
 					if (!f.getParams().get(i).isValid(c.getParameters().getParams().get(i).getType())) {
-						ErrorHandler.addError("Parameter number " + i + " type mismatch, expected " + f.getParams().get(i) + "  but got " + c.getParameters().getParams().get(i).getType(), c.getLine());
+						ErrorHandler.addError("Parameter number " + i + " type mismatch, expected " + f.getParams().get(i) + " but got " + c.getParameters().getParams().get(i).getType(), c.getLine());
 					}
 				}
 			} else if (f.getParams().size() < c.getParameters().getParams().size()) {

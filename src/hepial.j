@@ -15,32 +15,69 @@ invokespecial java/util/Scanner/<init>(Ljava/io/InputStream;)V
 invokevirtual java/util/Scanner/nextInt()I
 ireturn
 .end method
-.method public static main([Ljava/lang/String;)V
-.limit stack 6
-.limit locals 8
-ldc 12
-istore 0
+.method public static facto(I)I
+.limit stack 5
+.limit locals 10
+ldc 0
+istore 1
 iload 0
-ldc 1
-iadd
-istore 0
-ldc 1
-ldc 1
+ldc 0
 isub
 ifeq if1956725890_then
 goto if1956725890_else
 if1956725890_then:
-iload 0
-ldc 2
-iadd
-istore 0
+ldc 1
+ireturn
 goto endif1956725890
 if1956725890_else:
 iload 0
-ldc 2
+ldc 1
 isub
-istore 0
+invokestatic hepial.facto(I)I
+iload 0
+imul
+ireturn
 endif1956725890:
+ldc 0
+ireturn
+.end method
+.method public static main([Ljava/lang/String;)V
+.limit stack 9
+.limit locals 20
+invokestatic hepial.read()I
+istore 0
+iload 0
+ldc 20
+isub
+iflt if356573597_then
+goto if356573597_else
+if356573597_then:
+iload 0
+invokestatic hepial.facto(I)I
+istore 1
+ldc "factorielle de "
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+iload 0
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokevirtual java/io/PrintStream/print(I)V
+ldc " est égale à : "
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+iload 1
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokevirtual java/io/PrintStream/print(I)V
+goto endif356573597
+if356573597_else:
+ldc " votre nombre est trop grand ! "
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+endif356573597:
 return
 .end method
 

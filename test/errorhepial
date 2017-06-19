@@ -1,0 +1,27 @@
+programme errorhepial
+
+booleen b,c;
+entier x;
+entier y;
+
+entier f(entier k)
+debutfonc
+	retourne(k + 2);
+finfonc
+
+debutprg
+	x = vrai;
+	y = x + b;
+	b = 0;
+	
+	si x < b alors
+		x = ~x;
+		y = b(x);	
+		y = f(c);
+		y = f(x, y);
+	sinon
+		pour b allantde 0 a 10 faire
+			r = 3;
+		finpour
+	finsi
+finprg
