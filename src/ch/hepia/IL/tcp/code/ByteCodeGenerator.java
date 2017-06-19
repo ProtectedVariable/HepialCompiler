@@ -210,7 +210,10 @@ public class ByteCodeGenerator implements Visitor {
 		for (Expression e : c.getParameters().getParams()) {
 			Object p = e.accept(this);
 			if (p != null) {
-				appendln("iload " + (Integer) p);
+				if(e instanceof ArrayAccess)
+					appendln("iaload");
+				else
+					appendln("iload " + (Integer) p);
 			}
 		}
 		appendln("invokestatic " + classname + "." + c.getIdf().getName() + "(" + params + ")I");

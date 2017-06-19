@@ -1,8 +1,8 @@
 .class public hepial
 .super java/lang/Object
 .method public <init>()V
-aload_0
-invokespecial java/lang/Object/<init>()V
+aload_0 
+invokespecial java/lang/Object/<init>()V 
 return
 .end method
 .method public static read()I
@@ -52,7 +52,6 @@ isub
 ifgt endfor1956725890
 aload 0
 iload 1
-iload 0
 iaload
 invokestatic hepial.f(I)I
 getstatic java/lang/System/out Ljava/io/PrintStream;
@@ -66,3 +65,4 @@ goto for1956725890
 endfor1956725890:
 return
 .end method
+

@@ -2,11 +2,16 @@ programme hepial6
 entier[0..10] x;
 entier i;
 
+entier f(entier k)
+debutfonc
+	retourne(k + 2);
+finfonc
+
 debutprg
 	x[0] = 1;
 	x[5] = 50;
 	x[9] = 100;
 	pour i allantde 0 a 9 faire
-		ecrire x[i];
+		ecrire f(x[i]);
 	finpour
 finprg
