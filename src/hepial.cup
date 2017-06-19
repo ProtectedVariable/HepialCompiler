@@ -15,6 +15,9 @@ parser code {:
     String fname;
     Block currentBlock;
     Stack<Expression> indices = new Stack<>();
+    List<Integer> LimInf = new LinkedList<>();
+    List<Integer> LimSup = new LinkedList<>();
+
 :};
 
 
@@ -109,17 +112,20 @@ TYPE ::= ARRAY:t {:
 TYPEBASE ::= t_int:t  {: RESULT = IntType.getInstance(); :} | t_bool:t  {: RESULT = BoolType.getInstance(); :};
 
 ARRAY ::= TYPEBASE:t t_opensq DIM t_closesq {:
-    /*
-    if(t instanceof IntType) {
-        RESULT = Type.INTEGERARRAY;
-    } else if(t instanceof BoolType) {
-        RESULT = Type.BOOLEANARRAY;
-    }
-    *///TODO
-   RESULT = t;
+    RESULT = new ArrayType((Type)t, LimInf, LimSup);
+    LimInf.clear();
+    LimSup.clear();
 :};
 
-DIM ::= EXPR t_doubledot EXPR | DIM t_coma EXPR t_doubledot EXPR;
+DIM ::= t_intConst:i t_doubledot t_intConst:s {:
+    LimInf.add(i);
+    LimSup.add(s);
+:};
+
+DIM ::= DIM t_coma t_intConst:i t_doubledot t_intConst:s {:
+    LimInf.add(i);
+    LimSup.add(s);
+:};
 
 PARAM ::= TYPE:t t_ident:name {: params.add((Type)t); pnames.add((String)name); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :}
 | PARAM t_coma TYPE:t t_ident:name {: params.add((Type)t); pnames.add((String)name); SymbolTable.getInstance().add(new Entry((String)name), new Variable((Type)t, SymbolTable.getInstance().getBloc(), HepialF.line)); :};
@@ -150,7 +156,7 @@ ASSIGNMENT ::= ACCESS t_eq EXPR t_semicolon {:
     //EXPR
     Expression source = (Expression) (treeStack.pop());
     //ACCESS
-    Idf dest = (Idf) (treeStack.pop());
+    Expression dest = (Expression) (treeStack.pop());
     Block currentBlock = (Block)treeStack.peek();
     currentBlock.getInstructions().add(new Assignment(HepialF.line, source, dest));
 :};
@@ -264,17 +270,24 @@ ACCESS ::= t_ident:n {:
     treeStack.push(id);
 :};
 
-ACCESS ::= t_ident:n INDICES:i {:
-    List<Expression> ids = (List<Expression>) i;
-    Idf id = new Idf((String)n, ids);
+ACCESS ::= t_ident:n INDICES {:
+    Idf id = new Idf((String)n);
+    SymbolHEPIAL sh = SymbolTable.getInstance().identify(new Entry(n));
+    if(sh == null) {
+        ErrorHandler.addError("Symbol "+n+" not found", HepialF.line);
+    } else {
+        id.setType(sh.getType());
+    }
+    treeStack.push(new ArrayAccess(id, new LinkedList<Expression>(indices)));
+    indices.clear();
 :};
 
 INDICES ::= INDEX INDICES {:
-    //indices.push(treeStack.pop()); //TODO
+    indices.push((Expression)treeStack.pop());
 :};
 
 INDICES ::= INDEX {:
-    //indices.push(treeStack.pop()); //TODO
+    indices.push((Expression)treeStack.pop());
 :};
 
 INDEX ::= t_opensq EXPR t_closesq;

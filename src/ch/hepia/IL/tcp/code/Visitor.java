@@ -6,6 +6,7 @@ public interface Visitor {
 
 	Object visit(Addition a);
 	Object visit(And a);
+	Object visit(ArrayAccess a);
 	Object visit(Assignment a);
 	Object visit(Axiom a);
 	

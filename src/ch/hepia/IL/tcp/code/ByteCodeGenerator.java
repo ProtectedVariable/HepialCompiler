@@ -8,6 +8,7 @@ import ch.hepia.IL.tcp.SymbolTable;
 import ch.hepia.IL.tcp.tree.AbstractTree;
 import ch.hepia.IL.tcp.tree.Addition;
 import ch.hepia.IL.tcp.tree.And;
+import ch.hepia.IL.tcp.tree.ArrayAccess;
 import ch.hepia.IL.tcp.tree.Assignment;
 import ch.hepia.IL.tcp.tree.Axiom;
 import ch.hepia.IL.tcp.tree.Binary;
@@ -38,6 +39,7 @@ import ch.hepia.IL.tcp.tree.SupEqual;
 import ch.hepia.IL.tcp.tree.Superior;
 import ch.hepia.IL.tcp.tree.While;
 import ch.hepia.IL.tcp.tree.Write;
+import ch.hepia.IL.tcp.types.ArrayType;
 import ch.hepia.IL.tcp.types.Type;
 
 public class ByteCodeGenerator implements Visitor {
@@ -54,35 +56,15 @@ public class ByteCodeGenerator implements Visitor {
 		target = new StringBuilder();
 		target.append(".class public " + classname + "\n" + ".super java/lang/Object\n" + ".method public <init>()V\n" + "aload_0 \n" + "invokespecial java/lang/Object/<init>()V \n" + "return\n" + ".end method\n");
 		appendln(".method public static read()I");
-		appendln("    .limit locals 10 ");
-		appendln("    .limit stack 10 ");
-		appendln("    ldc 0 ");
-		appendln("    istore 1");
-		appendln("Label1: ");
-		appendln("    getstatic java/lang/System/in Ljava/io/InputStream; ");
-		appendln("    invokevirtual java/io/InputStream/read()I ");
-		appendln("    istore 2 ");
-		appendln("    iload 2 ");
-		appendln("    ldc 10");
-		appendln("    isub ");
-		appendln("    ifeq Label2 ");
-		appendln("    iload 2 ");
-		appendln("    ldc 32");
-		appendln("    isub ");
-		appendln("    ifeq Label2 ");
-		appendln("    iload 2 ");
-		appendln("    ldc 48");
-		appendln("    isub ");
-		appendln("    ldc 10 ");
-		appendln("    iload 1 ");
-		appendln("    imul ");
-		appendln("    iadd ");
-		appendln("    istore 1 ");
-		appendln("    goto Label1 ");
-		appendln("Label2: ");
-		appendln("    iload 1 ");
-		appendln("    ireturn ");
-		appendln(".end method ");
+		appendln(".limit locals 10");
+		appendln(".limit stack 10");
+		appendln("new java/util/Scanner");
+		appendln("dup");
+		appendln("getstatic java/lang/System/in Ljava/io/InputStream;");
+		appendln("invokespecial java/util/Scanner/<init>(Ljava/io/InputStream;)V");
+		appendln("invokevirtual java/util/Scanner/nextInt()I");
+		appendln("ireturn");
+		appendln(".end method");
 	}
 
 	public String Generate(AbstractTree t) {
@@ -124,15 +106,33 @@ public class ByteCodeGenerator implements Visitor {
 		appendln("iand");
 		return null;
 	}
+	
+	@Override
+	public Object visit(ArrayAccess a) {
+		Object local = a.getArray().accept(this);
+		appendln("aload "+(Integer)local);
+		for (Expression e : a.getAccess()) {
+			Object ax = e.accept(this);
+			if(ax != null) {
+				appendln("iload " + (Integer) ax);
+			}
+		}
+		return local;
+	}
 
 	@Override
 	public Object visit(Assignment a) {
 		Object local = a.getDest().accept(this);
 		Object src = a.getSource().accept(this);
+		
 		if (src != null) {
 			appendln("iload " + (Integer) src);
 		}
-		appendln("istore " + ((Integer) local).intValue());
+		if(a.getDest() instanceof ArrayAccess) {
+			appendln("iastore");
+		} else {
+			appendln("istore " + ((Integer) local).intValue());
+		}
 		return null;
 	}
 
@@ -294,6 +294,16 @@ public class ByteCodeGenerator implements Visitor {
 			i.setLocal(nextLocal);
 			locals.put(i.getName(), nextLocal);
 			nextLocal++;
+			if(i.getType() instanceof ArrayType) {
+				ArrayType at = (ArrayType)i.getType();
+				String sq = "";
+				for (int j = 0; j < at.getInfLimits().size(); j++) {
+					appendln("bipush "+(at.getSupLimits().get(j)-at.getInfLimits().get(j)));
+					sq = sq +"[";
+				}
+				appendln("multianewarray "+sq+"I "+at.getInfLimits().size());
+				appendln("astore "+i.getLocal());
+			}
 		} else if (i.getLocal() == -1) {
 			i.setLocal(locals.get(i.getName()));
 		}
@@ -407,7 +417,11 @@ public class ByteCodeGenerator implements Visitor {
 		if (w.getContent() != null) {
 			Object r = w.getContent().accept(this);
 			if (r instanceof Integer) {
-				appendln("iload " + (Integer) r);
+				if(w.getContent() instanceof ArrayAccess) {
+					appendln("iaload");
+				} else {
+					appendln("iload " + (Integer) r);
+				}
 			}
 			appendln("getstatic java/lang/System/out Ljava/io/PrintStream;");
 			appendln("swap");

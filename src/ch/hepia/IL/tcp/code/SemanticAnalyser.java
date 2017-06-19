@@ -7,6 +7,7 @@ import ch.hepia.IL.tcp.SymbolTable;
 import ch.hepia.IL.tcp.tree.AbstractTree;
 import ch.hepia.IL.tcp.tree.Addition;
 import ch.hepia.IL.tcp.tree.And;
+import ch.hepia.IL.tcp.tree.ArrayAccess;
 import ch.hepia.IL.tcp.tree.Assignment;
 import ch.hepia.IL.tcp.tree.Axiom;
 import ch.hepia.IL.tcp.tree.Binary;
@@ -149,6 +150,12 @@ public class SemanticAnalyser implements Visitor {
 		return new Boolean(((Boolean) valL).booleanValue() && ((Boolean) valR).booleanValue());
 	}
 
+	@Override
+	public Object visit(ArrayAccess a) {
+		a.getArray().accept(this);
+		return null;
+	}
+	
 	@Override
 	public Object visit(Assignment a) {
 		Object s = a.getSource().accept(this);

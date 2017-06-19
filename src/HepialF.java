@@ -805,8 +805,7 @@ class HepialF implements java_cup.runtime.Scanner {
             }
           case 52: break;
           case 2: 
-            { //System.out.println("I've seen sym.t_div "+yytext());
-    return new Symbol(sym.t_div);
+            { return new Symbol(sym.t_div);
             }
           case 53: break;
           case 3: 
@@ -814,243 +813,195 @@ class HepialF implements java_cup.runtime.Scanner {
             }
           case 54: break;
           case 4: 
-            { //System.out.println("I've seen sym.t_ident "+yytext());
-    return new Symbol(sym.t_ident, yytext());
+            { return new Symbol(sym.t_ident, yytext());
             }
           case 55: break;
           case 5: 
-            { //System.out.println("I've seen sym.t_to "+yytext());
-    return new Symbol(sym.t_to);
+            { return new Symbol(sym.t_to);
             }
           case 56: break;
           case 6: 
-            { //System.out.println("I've seen sym.t_semicolon "+yytext());
-    return new Symbol(sym.t_semicolon);
+            { return new Symbol(sym.t_semicolon);
             }
           case 57: break;
           case 7: 
-            { //System.out.println("I've seen sym.t_intConst "+yytext());
-    return new Symbol(sym.t_intConst, Integer.parseInt(yytext()));
+            { return new Symbol(sym.t_intConst, Integer.parseInt(yytext()));
             }
           case 58: break;
           case 8: 
-            { //System.out.println("I've seen sym.t_coma "+yytext());
-    return new Symbol(sym.t_coma);
+            { return new Symbol(sym.t_coma);
             }
           case 59: break;
           case 9: 
-            { //System.out.println("I've seen sym.t_eq "+yytext());
-    return new Symbol(sym.t_eq);
+            { return new Symbol(sym.t_eq);
             }
           case 60: break;
           case 10: 
-            { //System.out.println("I've seen sym.t_openpar "+yytext());
-    return new Symbol(sym.t_openpar);
+            { return new Symbol(sym.t_openpar);
             }
           case 61: break;
           case 11: 
-            { //System.out.println("I've seen sym.t_closepar "+yytext());
-    return new Symbol(sym.t_closepar);
+            { return new Symbol(sym.t_closepar);
             }
           case 62: break;
           case 12: 
-            { //System.out.println("I've seen sym.t_opensq "+yytext());
-    return new Symbol(sym.t_opensq);
+            { return new Symbol(sym.t_opensq);
             }
           case 63: break;
           case 13: 
-            { //System.out.println("I've seen sym.t_closesq "+yytext());
-    return new Symbol(sym.t_closesq);
+            { return new Symbol(sym.t_closesq);
             }
           case 64: break;
           case 14: 
-            { //System.out.println("I've seen sym.t_plus "+yytext());
-    return new Symbol(sym.t_plus);
+            { return new Symbol(sym.t_plus);
             }
           case 65: break;
           case 15: 
-            { //System.out.println("I've seen sym.t_minus "+yytext());
-    return new Symbol(sym.t_minus);
+            { return new Symbol(sym.t_minus);
             }
           case 66: break;
           case 16: 
-            { //System.out.println("I've seen sym.t_time "+yytext());
-    return new Symbol(sym.t_time);
+            { return new Symbol(sym.t_time);
             }
           case 67: break;
           case 17: 
-            { //System.out.println("I've seen sym.t_lt "+yytext());
-    return new Symbol(sym.t_lt);
+            { return new Symbol(sym.t_lt);
             }
           case 68: break;
           case 18: 
-            { //System.out.println("I've seen sym.t_gt "+yytext());
-    return new Symbol(sym.t_gt);
+            { return new Symbol(sym.t_gt);
             }
           case 69: break;
           case 19: 
-            { //System.out.println("I've seen sym.t_notn "+yytext());
-    return new Symbol(sym.t_notn);
+            { return new Symbol(sym.t_notn);
             }
           case 70: break;
           case 20: 
-            { //System.out.println("I've seen sym.t_and "+yytext());
-    return new Symbol(sym.t_and);
+            { return new Symbol(sym.t_and);
             }
           case 71: break;
           case 21: 
-            { //System.out.println("I've seen sym.t_or "+yytext());
-    return new Symbol(sym.t_or);
+            { return new Symbol(sym.t_or);
             }
           case 72: break;
           case 22: 
-            { //System.out.println("I've seen sym.t_if "+yytext());
-    return new Symbol(sym.t_if);
+            { return new Symbol(sym.t_if);
             }
           case 73: break;
           case 23: 
-            { //System.out.println("I've seen sym.t_doubleq "+yytext());
-    return new Symbol(sym.t_doubleq);
+            { return new Symbol(sym.t_doubleq);
             }
           case 74: break;
           case 24: 
-            { //System.out.println("I've seen sym.t_doubledot "+yytext());
-    return new Symbol(sym.t_doubledot);
+            { return new Symbol(sym.t_doubledot);
             }
           case 75: break;
           case 25: 
-            { //System.out.println("I've seen sym.t_string "+yytext());
-    return new Symbol(sym.t_string, yytext());
+            { return new Symbol(sym.t_string, yytext());
             }
           case 76: break;
           case 26: 
-            { //System.out.println("I've seen sym.t_le "+yytext());
-    return new Symbol(sym.t_le);
+            { return new Symbol(sym.t_le);
             }
           case 77: break;
           case 27: 
-            { //System.out.println("I've seen sym.t_diff "+yytext());
-    return new Symbol(sym.t_diff);
+            { return new Symbol(sym.t_diff);
             }
           case 78: break;
           case 28: 
-            { //System.out.println("I've seen sym.t_ge "+yytext());
-    return new Symbol(sym.t_ge);
+            { return new Symbol(sym.t_ge);
             }
           case 79: break;
           case 29: 
-            { //System.out.println("I've seen sym.t_not "+yytext());
-    return new Symbol(sym.t_not);
+            { return new Symbol(sym.t_not);
             }
           case 80: break;
           case 30: 
-            { //System.out.println("I've seen sym.t_for "+yytext());
-    return new Symbol(sym.t_for);
+            { return new Symbol(sym.t_for);
             }
           case 81: break;
           case 31: 
-            { //System.out.println("I've seen sym.t_false "+yytext());
-    return new Symbol(sym.t_false);
+            { return new Symbol(sym.t_false);
             }
           case 82: break;
           case 32: 
-            { //System.out.println("I've seen sym.t_read "+yytext());
-    return new Symbol(sym.t_read);
+            { return new Symbol(sym.t_read);
             }
           case 83: break;
           case 33: 
-            { //System.out.println("I've seen sym.t_true "+yytext());
-    return new Symbol(sym.t_true);
+            { return new Symbol(sym.t_true);
             }
           case 84: break;
           case 34: 
-            { //System.out.println("I've seen sym.t_endif "+yytext());
-    return new Symbol(sym.t_endif);
+            { return new Symbol(sym.t_endif);
             }
           case 85: break;
           case 35: 
-            { //System.out.println("I've seen sym.t_do "+yytext());
-    return new Symbol(sym.t_do);
+            { return new Symbol(sym.t_do);
             }
           case 86: break;
           case 36: 
-            { //System.out.println("I've seen sym.t_then "+yytext());
-    return new Symbol(sym.t_then);
+            { return new Symbol(sym.t_then);
             }
           case 87: break;
           case 37: 
-            { //System.out.println("I've seen sym.t_else "+yytext());
-    return new Symbol(sym.t_else);
+            { return new Symbol(sym.t_else);
             }
           case 88: break;
           case 38: 
-            { //System.out.println("I've seen sym.t_int "+yytext());
-    return new Symbol(sym.t_int);
+            { return new Symbol(sym.t_int);
             }
           case 89: break;
           case 39: 
-            { //System.out.println("I've seen sym.t_write "+yytext());
-    return new Symbol(sym.t_write);
+            { return new Symbol(sym.t_write);
             }
           case 90: break;
           case 40: 
-            { //System.out.println("I've seen sym.t_endPrg "+yytext());
-    return new Symbol(sym.t_endPrg);
+            { return new Symbol(sym.t_endPrg);
             }
           case 91: break;
           case 41: 
-            { //System.out.println("I've seen sym.t_bool "+yytext());
-    return new Symbol(sym.t_bool);
+            { return new Symbol(sym.t_bool);
             }
           case 92: break;
           case 42: 
-            { //System.out.println("I've seen sym.t_while "+yytext());
-    return new Symbol(sym.t_while);
+            { return new Symbol(sym.t_while);
             }
           case 93: break;
           case 43: 
-            { //System.out.println("I've seen sym.t_endfor "+yytext());
-    return new Symbol(sym.t_endfor);
+            { return new Symbol(sym.t_endfor);
             }
           case 94: break;
           case 44: 
-            { //System.out.println("I've seen sym.t_endfunc "+yytext());
-    return new Symbol(sym.t_endfunc);
+            { return new Symbol(sym.t_endfunc);
             }
           case 95: break;
           case 45: 
-            { //System.out.println("I've seen sym.t_beginPrg "+yytext());
-    return new Symbol(sym.t_beginPrg);
+            { return new Symbol(sym.t_beginPrg);
             }
           case 96: break;
           case 46: 
-            { //System.out.println("I've seen sym.t_return "+yytext());
-    return new Symbol(sym.t_return);
+            { return new Symbol(sym.t_return);
             }
           case 97: break;
           case 47: 
-            { //System.out.println("I've seen sym.t_from "+yytext());
-    return new Symbol(sym.t_from);
+            { return new Symbol(sym.t_from);
             }
           case 98: break;
           case 48: 
-            { //System.out.println("I've seen sym.t_beginfunc "+yytext());
-    return new Symbol(sym.t_beginfunc);
+            { return new Symbol(sym.t_beginfunc);
             }
           case 99: break;
           case 49: 
-            { //System.out.println("I've seen sym.t_prg "+yytext());
-    return new Symbol(sym.t_prg);
+            { return new Symbol(sym.t_prg);
             }
           case 100: break;
           case 50: 
-            { //System.out.println("I've seen sym.t_const "+yytext());
-    return new Symbol(sym.t_const);
+            { return new Symbol(sym.t_const);
             }
           case 101: break;
           case 51: 
-            { //System.out.println("I've seen sym.t_endwhile "+yytext());
-    return new Symbol(sym.t_endwhile);
+            { return new Symbol(sym.t_endwhile);
             }
           case 102: break;
           default:

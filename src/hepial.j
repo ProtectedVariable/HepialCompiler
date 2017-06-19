@@ -1,103 +1,68 @@
 .class public hepial
 .super java/lang/Object
 .method public <init>()V
-aload_0 
-invokespecial java/lang/Object/<init>()V 
+aload_0
+invokespecial java/lang/Object/<init>()V
 return
 .end method
 .method public static read()I
-    .limit locals 10 
-    .limit stack 10 
-    ldc 0 
-    istore 1
-Label1: 
-    getstatic java/lang/System/in Ljava/io/InputStream; 
-    invokevirtual java/io/InputStream/read()I 
-    istore 2 
-    iload 2 
-    ldc 10
-    isub 
-    ifeq Label2 
-    iload 2 
-    ldc 32
-    isub 
-    ifeq Label2 
-    iload 2 
-    ldc 48
-    isub 
-    ldc 10 
-    iload 1 
-    imul 
-    iadd 
-    istore 1 
-    goto Label1 
-Label2: 
-    iload 1 
-    ireturn 
-.end method 
-.method public static facto(I)I
-.limit stack 5
 .limit locals 10
-ldc 0
-istore 1
-iload 0
-ldc 0
-isub
-ifeq if1956725890_then
-goto if1956725890_else
-if1956725890_then:
-ldc 1
+.limit stack 10
+new java/util/Scanner
+dup
+getstatic java/lang/System/in Ljava/io/InputStream;
+invokespecial java/util/Scanner/<init>(Ljava/io/InputStream;)V
+invokevirtual java/util/Scanner/nextInt()I
 ireturn
-goto endif1956725890
-if1956725890_else:
+.end method
+.method public static f(I)I
+.limit stack 4
+.limit locals 8
 iload 0
-ldc 1
-isub
-invokestatic hepial.facto(I)I
-iload 0
-imul
+ldc 2
+iadd
 ireturn
-endif1956725890:
 ldc 0
 ireturn
 .end method
 .method public static main([Ljava/lang/String;)V
-.limit stack 9
-.limit locals 20
-invokestatic hepial.read()I
-istore 0
-iload 0
-ldc 20
-isub
-iflt if356573597_then
-goto if356573597_else
-if356573597_then:
-iload 0
-invokestatic hepial.facto(I)I
+.limit stack 8
+.limit locals 16
+bipush 10
+multianewarray [I 1
+astore 0
+aload 0
+ldc 0
+ldc 1
+iastore
+aload 0
+ldc 5
+ldc 50
+iastore
+aload 0
+ldc 9
+ldc 100
+iastore
+ldc 0
 istore 1
-ldc "factorielle de "
-getstatic java/lang/System/out Ljava/io/PrintStream;
-swap
-invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
-iload 0
-getstatic java/lang/System/out Ljava/io/PrintStream;
-swap
-invokevirtual java/io/PrintStream/print(I)V
-ldc " est égale à : "
-getstatic java/lang/System/out Ljava/io/PrintStream;
-swap
-invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+for1956725890:
 iload 1
+ldc 9
+isub
+ifgt endfor1956725890
+aload 0
+iload 1
+iload 0
+iaload
+invokestatic hepial.f(I)I
 getstatic java/lang/System/out Ljava/io/PrintStream;
 swap
 invokevirtual java/io/PrintStream/print(I)V
-goto endif356573597
-if356573597_else:
-ldc " votre nombre est trop grand ! "
-getstatic java/lang/System/out Ljava/io/PrintStream;
-swap
-invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
-endif356573597:
+ldc 1
+iload 1
+iadd
+istore 1
+goto for1956725890
+endfor1956725890:
 return
 .end method
-
