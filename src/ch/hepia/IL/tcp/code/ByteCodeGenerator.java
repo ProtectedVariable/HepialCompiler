@@ -85,11 +85,17 @@ public class ByteCodeGenerator implements Visitor {
 	public void visitBinary(Binary b) {
 		Object l = b.getLeft().accept(this);
 		if (l != null && l instanceof Integer) {
-			appendln("iload " + (Integer) l);
+			if (b.getLeft() instanceof ArrayAccess)
+				appendln("iaload");
+			else
+				appendln("iload " + (Integer) l);
 		}
 		Object r = b.getRight().accept(this);
 		if (r != null && r instanceof Integer) {
-			appendln("iload " + (Integer) r);
+			if (b.getRight() instanceof ArrayAccess)
+				appendln("iaload");
+			else
+				appendln("iload " + (Integer) r);
 		}
 	}
 
@@ -106,14 +112,14 @@ public class ByteCodeGenerator implements Visitor {
 		appendln("iand");
 		return null;
 	}
-	
+
 	@Override
 	public Object visit(ArrayAccess a) {
 		Object local = a.getArray().accept(this);
-		appendln("aload "+(Integer)local);
+		appendln("aload " + (Integer) local);
 		for (Expression e : a.getAccess()) {
 			Object ax = e.accept(this);
-			if(ax != null) {
+			if (ax != null) {
 				appendln("iload " + (Integer) ax);
 			}
 		}
@@ -124,11 +130,11 @@ public class ByteCodeGenerator implements Visitor {
 	public Object visit(Assignment a) {
 		Object local = a.getDest().accept(this);
 		Object src = a.getSource().accept(this);
-		
+
 		if (src != null) {
 			appendln("iload " + (Integer) src);
 		}
-		if(a.getDest() instanceof ArrayAccess) {
+		if (a.getDest() instanceof ArrayAccess) {
 			appendln("iastore");
 		} else {
 			appendln("istore " + ((Integer) local).intValue());
@@ -210,7 +216,7 @@ public class ByteCodeGenerator implements Visitor {
 		for (Expression e : c.getParameters().getParams()) {
 			Object p = e.accept(this);
 			if (p != null) {
-				if(e instanceof ArrayAccess)
+				if (e instanceof ArrayAccess)
 					appendln("iaload");
 				else
 					appendln("iload " + (Integer) p);
@@ -297,15 +303,15 @@ public class ByteCodeGenerator implements Visitor {
 			i.setLocal(nextLocal);
 			locals.put(i.getName(), nextLocal);
 			nextLocal++;
-			if(i.getType() instanceof ArrayType) {
-				ArrayType at = (ArrayType)i.getType();
+			if (i.getType() instanceof ArrayType) {
+				ArrayType at = (ArrayType) i.getType();
 				String sq = "";
 				for (int j = 0; j < at.getInfLimits().size(); j++) {
-					appendln("bipush "+(at.getSupLimits().get(j)-at.getInfLimits().get(j)));
-					sq = sq +"[";
+					appendln("bipush " + (at.getSupLimits().get(j) - at.getInfLimits().get(j)));
+					sq = sq + "[";
 				}
-				appendln("multianewarray "+sq+"I "+at.getInfLimits().size());
-				appendln("astore "+i.getLocal());
+				appendln("multianewarray " + sq + "I " + at.getInfLimits().size());
+				appendln("astore " + i.getLocal());
 			}
 		} else if (i.getLocal() == -1) {
 			i.setLocal(locals.get(i.getName()));
@@ -420,7 +426,7 @@ public class ByteCodeGenerator implements Visitor {
 		if (w.getContent() != null) {
 			Object r = w.getContent().accept(this);
 			if (r instanceof Integer) {
-				if(w.getContent() instanceof ArrayAccess) {
+				if (w.getContent() instanceof ArrayAccess) {
 					appendln("iaload");
 				} else {
 					appendln("iload " + (Integer) r);

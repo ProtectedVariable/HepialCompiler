@@ -43,6 +43,14 @@ aload 0
 ldc 9
 ldc 100
 iastore
+aload 0
+ldc 1
+aload 0
+ldc 1
+iaload
+ldc 3
+iadd
+iastore
 ldc 0
 istore 1
 for1956725890:
