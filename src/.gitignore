@@ -1,3 +1,5 @@
 *.class
 *.java\~
-*.java~ 
+*.java~
+hepial.j
+.DS_Store 
